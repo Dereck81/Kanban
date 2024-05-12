@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import pe.edu.utp.dsa.kanban.Controllers.KanbanController;
 
@@ -15,9 +16,9 @@ public class Kanban extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Kanban.fxml"));
-        KanbanController controller = fxmlLoader.getController();
         Scene scene = new Scene(fxmlLoader.load(), 1100, 533);
-        scene.setOnKeyPressed(keyEvent -> {
+        KanbanController controller = fxmlLoader.getController();
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if(keyEvent.getCode().getName().equalsIgnoreCase("ESC"))
                 controller.deselectAllListCell();
         });

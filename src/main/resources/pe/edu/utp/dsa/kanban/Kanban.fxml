@@ -76,7 +76,7 @@
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <Separator layoutY="133.0" prefHeight="11.0" prefWidth="191.0" />
-                              <ListView fx:id="listViewRoles" layoutX="-1.0" layoutY="137.0" prefHeight="270.0" prefWidth="191.0" />
+                              <ListView fx:id="listViewRoles" layoutX="-1.0" layoutY="137.0" prefHeight="261.0" prefWidth="191.0" />
                               <AnchorPane prefHeight="138.0" prefWidth="191.0">
                                  <children>
                                     <Label layoutX="61.0" layoutY="11.0" text="ADD ROLE" textFill="#0d90bf">
@@ -110,7 +110,7 @@
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <Separator layoutY="159.0" prefHeight="11.0" prefWidth="191.0" />
-                              <ListView fx:id="listViewUsers" layoutX="-1.0" layoutY="163.0" prefHeight="245.0" prefWidth="191.0" />
+                              <ListView fx:id="listViewUsers" layoutX="-1.0" layoutY="163.0" prefHeight="235.0" prefWidth="191.0" />
                               <AnchorPane layoutX="-3.0" prefHeight="158.0" prefWidth="197.0">
                                  <children>
                                     <Label layoutX="59.0" layoutY="14.0" text="ADD USER" textFill="#0d90bf">

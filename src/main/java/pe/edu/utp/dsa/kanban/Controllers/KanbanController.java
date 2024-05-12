@@ -5,54 +5,47 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import pe.edu.utp.dsa.kanban.ListView.ListCell;
 import pe.edu.utp.dsa.kanban.Task.KanbanTask;
+import pe.edu.utp.dsa.kanban.Utilities.Role;
+import pe.edu.utp.dsa.kanban.Utilities.User;
 
 import java.time.LocalDate;
 
 public class KanbanController {
-    @FXML
-    private Label welcomeText;
 
+    //FXML
     @FXML
-    private ListView<Pane> listViewCatalogue = new ListView<>();
-
+    private ListView<KanbanTask> listViewCatalogue = new ListView<>();
     @FXML
-    private ListView<Pane> listViewToDo = new ListView<>();
-
+    private ListView<KanbanTask> listViewToDo = new ListView<>();
     @FXML
-    private ListView<Pane> listViewInProgress = new ListView<>();
-
+    private ListView<KanbanTask> listViewInProgress = new ListView<>();
     @FXML
-    private ListView<Pane> listViewToBeChecked = new ListView<>();
-
+    private ListView<KanbanTask> listViewToBeChecked = new ListView<>();
     @FXML
-    private ListView<Pane> listViewFinished = new ListView<>();
-
+    private ListView<KanbanTask> listViewFinished = new ListView<>();
     @FXML
-    private ListView<String> listViewUsers = new ListView<>();
+    private ListView<User> listViewUsers = new ListView<>();
     @FXML
-    private ListView<String> listViewRoles = new ListView<>();
-
+    private ListView<Role> listViewRoles = new ListView<>();
     @FXML
     private TitledPane titledPaneProjectCreator;
-
     @FXML
     private TitledPane titledPaneTaskOthers;
-
     @FXML
     private AnchorPane anchorPaneAddTask, anchorPaneTaskInfo, anchorPaneEditTask;
-
-
     @FXML
     private TextField textFieldTaskName, textFieldFinishedDate;
-
     @FXML
     private MenuButton menuButtonPriority, menuButtonState, menuButtonAsgUsr;
 
+    //Others
     private ContextMenu contextMenuCatalogue = new ContextMenu();
     private ContextMenu contextMenuOthersColumns = new ContextMenu();
-    private boolean isDeselectionByUser = true;
 
+    //Others
+    private boolean isDeselectionByUser = true;
 
     @FXML
     public void initialize(){
@@ -61,8 +54,19 @@ public class KanbanController {
                 //falta eliminar los datos ingresados (resetear)
                 anchorPaneAddTask.setVisible(false);
         });
+        configListView();
         setContextMenuConfig();
         setOnEventOnListView();
+    }
+
+    private void configListView(){
+        listViewCatalogue.setCellFactory(param -> new ListCell<>());
+        listViewToDo.setCellFactory(param -> new ListCell<>());
+        listViewInProgress.setCellFactory(param -> new ListCell<>());
+        listViewToBeChecked.setCellFactory(param -> new ListCell<>());
+        listViewFinished.setCellFactory(param -> new ListCell<>());
+        listViewUsers.setCellFactory(param -> new ListCell<>());
+        listViewRoles.setCellFactory(param -> new ListCell<>());
     }
 
 
@@ -166,7 +170,7 @@ public class KanbanController {
     }
 
     @SafeVarargs
-    public final void deselectListCell(ListView<Pane>...lists){
+    public final void deselectListCell(ListView<KanbanTask>...lists){
         isDeselectionByUser = false;
         for (int i = 0; i < lists.length; i++) {
             boolean flag = lists[i].getSelectionModel().getSelectedItems().isEmpty();
@@ -187,6 +191,16 @@ public class KanbanController {
     private void executeTitledPaneTask(){
         anchorPaneAddTask.setVisible(true);
         titledPaneTaskOthers.setExpanded(true);
+    }
+
+    @FXML
+    private void addRole(){
+
+    }
+
+    @FXML
+    private void addUser(){
+
     }
 
     @FXML
@@ -229,8 +243,10 @@ public class KanbanController {
 
     @FXML
     public void init(){
-        listViewToDo.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()).getPaneTask());
-        listViewCatalogue.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()).getPaneTask());
+        listViewRoles.getItems().add(new Role("Administracion"));
+        listViewUsers.getItems().add(new User("Kevin Huanca Fernández", "estudiante d jorgito uwu"));
+        listViewToDo.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()));
+        listViewCatalogue.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()));
     }
 
 

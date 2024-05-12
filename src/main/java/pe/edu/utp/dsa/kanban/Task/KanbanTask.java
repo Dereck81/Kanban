@@ -79,6 +79,7 @@ public class KanbanTask {
         // substring(1) was placed because it returned the directory with a /
         // at the beginning and that caused it to not find the image
 
+        // size
         paneTask.setPrefHeight(100);
         icon.setFitWidth(20);
         icon.setFitHeight(20);
@@ -87,8 +88,10 @@ public class KanbanTask {
         author.setLayoutX(30);
         author.setLayoutY(heightPaneTask-20);
         icon.setLayoutY(heightPaneTask-20);
-        //paneTask.getChildren().add(new Button("asd"));
+
+        //Add
         paneTask.getChildren().addAll(icon, author);
+
         return paneTask;
     }
 
