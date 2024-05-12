@@ -1,0 +1,6 @@
+.titled-pane .title {
+    -fx-background-color: #a09d9d;
+    -fx-font-weight: bold;
+    -fx-border-color: #8e8c8c;
+    -fx-border-width: 1px;
+}

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="533.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.utp.dsa.kanban.Controllers.KanbanController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open..." />
+                  <Menu fx:id="menuOpenRecentFIle" mnemonicParsing="false" text="Open Recent">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportAsPDF" text="Export as PDF" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#closeFile" text="Close file" />
+                  <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="512.0" prefWidth="1100.0">
+         <children>
+            <Accordion prefHeight="96.0" prefWidth="195.0" style="-fx-border-width: 20;">
+              <panes>
+                <TitledPane fx:id="titledPaneProjectCreator" stylesheets="@styles/TitledPaneAccordion.css" text="Project Creator">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="145.0" fitWidth="149.0" layoutX="22.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@imgs/user1.png" />
+                                 </image>
+                              </ImageView>
+                              <Label layoutX="8.0" layoutY="187.0" text="Username: " />
+                              <TextField layoutX="71.0" layoutY="183.0" prefHeight="25.0" prefWidth="110.0" promptText="Input username..." text="userKanban" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane stylesheets="@styles/TitledPaneAccordion.css" text="Roles">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Separator layoutY="133.0" prefHeight="11.0" prefWidth="191.0" />
+                              <ListView fx:id="listViewRoles" layoutX="-1.0" layoutY="137.0" prefHeight="270.0" prefWidth="191.0" />
+                              <AnchorPane prefHeight="138.0" prefWidth="191.0">
+                                 <children>
+                                    <Label layoutX="61.0" layoutY="11.0" text="ADD ROLE" textFill="#0d90bf">
+                                       <font>
+                                          <Font name="System Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="14.0" layoutY="52.0" text="Rol: " />
+                                    <TextField layoutX="45.0" layoutY="49.0" prefHeight="25.0" prefWidth="134.0" />
+                                    <Button layoutX="69.0" layoutY="92.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Add" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="138.0" prefWidth="191.0" visible="false">
+                                 <children>
+                                    <Label layoutX="61.0" layoutY="11.0" text="EDIT ROLE" textFill="#0d90bf">
+                                       <font>
+                                          <Font name="System Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="14.0" layoutY="52.0" text="Rol: " />
+                                    <TextField layoutX="45.0" layoutY="49.0" prefHeight="25.0" prefWidth="134.0" />
+                                    <Button layoutX="69.0" layoutY="92.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Edit" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                  <TitledPane stylesheets="@styles/TitledPaneAccordion.css" text="Users">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Separator layoutY="159.0" prefHeight="11.0" prefWidth="191.0" />
+                              <ListView fx:id="listViewUsers" layoutX="-1.0" layoutY="163.0" prefHeight="245.0" prefWidth="191.0" />
+                              <AnchorPane layoutX="-3.0" prefHeight="158.0" prefWidth="197.0">
+                                 <children>
+                                    <Label layoutX="59.0" layoutY="14.0" text="ADD USER" textFill="#0d90bf">
+                                       <font>
+                                          <Font name="System Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="50.0" text="Username: " />
+                                    <Label layoutX="10.0" layoutY="79.0" text="Rol: " />
+                                    <Button layoutX="73.0" layoutY="119.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" text="Add" />
+                                    <MenuButton layoutX="77.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Select...">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                                      </items>
+                                    </MenuButton>
+                                    <TextField layoutX="78.0" layoutY="46.0" prefHeight="25.0" prefWidth="102.0" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="-3.0" prefHeight="158.0" prefWidth="197.0" visible="false">
+                                 <children>
+                                    <Label layoutX="59.0" layoutY="14.0" text="EDIT USER" textFill="#0d90bf">
+                                       <font>
+                                          <Font name="System Bold" size="15.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="10.0" layoutY="50.0" text="Username: " />
+                                    <Label layoutX="10.0" layoutY="79.0" text="Rol: " />
+                                    <Button layoutX="73.0" layoutY="119.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" text="Edit" />
+                                    <MenuButton layoutX="77.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Select...">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                       </items>
+                                    </MenuButton>
+                                    <TextField layoutX="78.0" layoutY="46.0" prefHeight="25.0" prefWidth="102.0" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+                <TitledPane fx:id="titledPaneTaskOthers" stylesheets="@styles/TitledPaneAccordion.css" text="Task / Others">
+                     <content>
+                        <Pane>
+                           <children>
+                              <AnchorPane fx:id="anchorPaneTaskInfo" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
+                                 <children>
+                                    <Label layoutX="5.0" layoutY="178.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="276.0" prefHeight="17.0" prefWidth="78.0" text="Creation date: " />
+                                    <Label layoutX="6.0" layoutY="300.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="251.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="202.0" prefHeight="17.0" prefWidth="78.0" text="Task number:" />
+                                    <Label layoutX="5.0" layoutY="226.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="324.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <Label layoutX="89.0" layoutY="178.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="203.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="226.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="251.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="277.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="301.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="325.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="21.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@imgs/task.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="anchorPaneAddTask" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0">
+                                 <children>
+                                    <Label layoutX="5.0" layoutY="173.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="280.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="244.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="208.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="313.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="27.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@imgs/task.png" />
+                                       </image>
+                                    </ImageView>
+                                    <TextField fx:id="textFieldTaskName" layoutX="88.0" layoutY="169.0" prefHeight="25.0" prefWidth="99.0" />
+                                    <MenuButton fx:id="menuButtonPriority" layoutX="88.0" layoutY="204.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                                      </items>
+                                    </MenuButton>
+                                    <MenuButton fx:id="menuButtonState" layoutX="88.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                                      </items>
+                                    </MenuButton>
+                                    <TextField fx:id="textFieldFinishedDate" layoutX="89.0" layoutY="276.0" prefHeight="25.0" prefWidth="98.0" />
+                                    <MenuButton fx:id="menuButtonAsgUsr" layoutX="89.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                                      </items>
+                                    </MenuButton>
+                                    <Button fx:id="addTask" layoutX="63.0" layoutY="354.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Add" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="anchorPaneEditTask" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
+                                 <children>
+                                    <Label layoutX="5.0" layoutY="173.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="280.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="244.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="208.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="313.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="27.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@imgs/task.png" />
+                                       </image>
+                                    </ImageView>
+                                    <TextField layoutX="88.0" layoutY="169.0" prefHeight="25.0" prefWidth="99.0" />
+                                    <MenuButton layoutX="88.0" layoutY="204.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                       </items>
+                                    </MenuButton>
+                                    <MenuButton layoutX="88.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                       </items>
+                                    </MenuButton>
+                                    <TextField layoutX="89.0" layoutY="276.0" prefHeight="25.0" prefWidth="98.0" />
+                                    <MenuButton layoutX="89.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                       </items>
+                                    </MenuButton>
+                                    <Button layoutX="63.0" layoutY="354.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Edit" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </Pane>
+                     </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="506.0" prefWidth="912.0">
+               <children>
+                  <Separator orientation="VERTICAL" prefHeight="508.0" prefWidth="3.0" />
+                  <VBox prefHeight="506.0" prefWidth="891.0">
+                     <children>
+                        <Pane prefHeight="56.0" prefWidth="719.0">
+                           <children>
+                              <TextField disable="true" layoutX="15.0" layoutY="16.0" promptText="Search..." />
+                              <Button fx:id="buttonATsk" layoutX="804.0" layoutY="16.0" mnemonicParsing="false" onAction="#executeTitledPaneTask" text="Add Task" />
+                              <MenuButton layoutX="540.0" layoutY="16.0" mnemonicParsing="false" text="Filters">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                                 </items>
+                              </MenuButton>
+                              <Button fx:id="buttonExportAsPDF" layoutX="665.0" layoutY="16.0" mnemonicParsing="false" onAction="#init" text="Export as PDF" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </VBox>
+                  <HBox layoutX="10.0" layoutY="57.0" prefHeight="441.0" prefWidth="890.0">
+                     <children>
+                        <TitledPane fx:id="titledPaneCatalogue" alignment="CENTER" collapsible="false" prefHeight="444.0" prefWidth="174.0" stylesheets="@styles/TitledPaneCatalogue.css" text="CATALOGUE" textFill="WHITE">
+                           <content>
+                              <ListView fx:id="listViewCatalogue" prefHeight="374.0" prefWidth="178.0" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneToDo" alignment="CENTER" collapsible="false" prefHeight="443.0" prefWidth="179.0" stylesheets="@styles/TitledPaneToDo.css" text="TO DO" textFill="WHITE">
+                           <content>
+                              <ListView fx:id="listViewToDo" prefHeight="295.0" prefWidth="178.0" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneInProgress" alignment="CENTER" collapsible="false" prefHeight="447.0" prefWidth="183.0" stylesheets="@styles/TitledPaneInProgress.css" text="IN PROGRESS" textFill="WHITE">
+                           <content>
+                              <ListView fx:id="listViewInProgress" prefHeight="295.0" prefWidth="178.0" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneToChecked" alignment="CENTER" collapsible="false" prefHeight="442.0" prefWidth="186.0" stylesheets="@styles/TitledPaneToBeChecked.css" text="TO BE CHECKED" textFill="#f5f5f5">
+                           <content>
+                              <ListView fx:id="listViewToBeChecked" prefHeight="200.0" prefWidth="178.0" />
+                           </content>
+                        </TitledPane>
+                        <TitledPane fx:id="titledPaneFinished" alignment="CENTER" collapsible="false" prefHeight="450.0" prefWidth="188.0" stylesheets="@styles/TitledPaneFinished.css" text="FINISHED" textFill="WHITE">
+                           <content>
+                              <ListView fx:id="listViewFinished" prefHeight="200.0" prefWidth="178.0" />
+                           </content>
+                        </TitledPane>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</VBox>

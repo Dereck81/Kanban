@@ -1,0 +1,8 @@
+.titled-pane .title {
+    -fx-background-color: #ffc000;
+    -fx-font-weight: bold;
+}
+
+.titled-pane .content {
+    -fx-background-color: #fbe3d6;
+}
