@@ -8,7 +8,12 @@ import pe.edu.utp.dsa.kanban.Kanban;
 
 import java.util.Objects;
 
-public class User{
+public class User implements Comparable<User>{
+
+    @Override
+    public int compareTo(User o) {
+        return this.name.compareTo(o.getName())*-1;
+    }
 
     private String name;
     private String rol;
@@ -65,6 +70,7 @@ public class User{
 
         return paneUser;
     }
+
 
 
 }

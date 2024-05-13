@@ -10,7 +10,21 @@ import pe.edu.utp.dsa.kanban.Kanban;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class KanbanTask {
+public class KanbanTask implements Comparable<KanbanTask>{
+
+    @Override
+    public int compareTo(KanbanTask o) {
+        int oP = o.getPriority();
+        LocalDate oD = o.getFinishDate();
+        if(this.priority > oP || this.priority < oP) return priority - oP;
+        else
+            if(this.finishDate.isBefore(oD))
+                return -1;
+            else if(this.finishDate.isAfter(oD))
+                return 1;
+            else
+                return 0;
+    }
 
     private String name;
     private int priority;
@@ -19,17 +33,17 @@ public class KanbanTask {
     private String author;
     private String userAssignedToTheTask;
     private LocalDate registrationDate;
-    private LocalDate deadLine;
+    private LocalDate finishDate;
 
     public KanbanTask(String userAssignedToTheTask, String author, String role, int numberTask,
-                      int priority, LocalDate deadLine) throws IllegalArgumentException{
+                      int priority, LocalDate finishDate) throws IllegalArgumentException{
 
-        if((priority < 0 || priority > 5) || (deadLine.isBefore(LocalDate.now())))
+        if((priority < 0 || priority > 5) || (finishDate.isBefore(LocalDate.now())))
             throw new IllegalArgumentException("The data entered is invalid");
 
         this.userAssignedToTheTask = userAssignedToTheTask;
         this.numberTask = numberTask;
-        this.deadLine = deadLine;
+        this.finishDate = finishDate;
         this.registrationDate = LocalDate.now();
         this.priority = priority;
         this.role = role;
@@ -68,31 +82,46 @@ public class KanbanTask {
         this.author = author;
     }
 
+    public LocalDate getFinishDate(){
+        return finishDate;
+    }
+
+
     public Pane getPaneTask(){
         double heightPaneTask = 100.0;
         double widthPaneTask = 198.0;
         Label author = new Label(this.author);
+        Label finishDate = new Label(this.finishDate.toString());
 
         Pane paneTask = new Pane();
-        ImageView icon = new ImageView(new Image(Objects.requireNonNull(Kanban.class.getResource("imgs/user.png")).getFile()
+        paneTask.setStyle("-fx-border");
+        ImageView iconCalendar = new ImageView(new Image(Objects.requireNonNull(Kanban.class.getResource("imgs/calendar.png")).getFile()
+                .replaceAll("%20", " ").substring(1)));
+        ImageView iconUser = new ImageView(new Image(Objects.requireNonNull(Kanban.class.getResource("imgs/user.png")).getFile()
                 .replaceAll("%20", " ").substring(1)));
         // substring(1) was placed because it returned the directory with a /
         // at the beginning and that caused it to not find the image
 
         // size
         paneTask.setPrefHeight(100);
-        icon.setFitWidth(20);
-        icon.setFitHeight(20);
+        iconUser.setFitWidth(20);
+        iconUser.setFitHeight(20);
+        iconCalendar.setFitWidth(22);
+        iconCalendar.setFitHeight(22);
 
         //config layout (X, Y)
         author.setLayoutX(30);
-        author.setLayoutY(heightPaneTask-20);
-        icon.setLayoutY(heightPaneTask-20);
+        author.setLayoutY(heightPaneTask-22);
+        finishDate.setLayoutX(30);
+        finishDate.setLayoutY(8);
+        iconUser.setLayoutY(heightPaneTask-20);
+        iconCalendar.setLayoutY(5);
 
         //Add
-        paneTask.getChildren().addAll(icon, author);
+        paneTask.getChildren().addAll(iconUser, author, iconCalendar, finishDate);
 
         return paneTask;
     }
+
 
 }

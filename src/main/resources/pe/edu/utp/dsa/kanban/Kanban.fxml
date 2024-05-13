@@ -10,6 +10,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.Image?>
@@ -27,11 +28,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open..." />
-                  <Menu fx:id="menuOpenRecentFIle" mnemonicParsing="false" text="Open Recent">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
+                  <Menu fx:id="menuOpenRecentFile" mnemonicParsing="false" text="Open Recent" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Save" />
                   <MenuItem mnemonicParsing="false" onAction="#exportAsPDF" text="Export as PDF" />
@@ -120,14 +117,14 @@
                                     </Label>
                                     <Label layoutX="10.0" layoutY="50.0" text="Username: " />
                                     <Label layoutX="10.0" layoutY="79.0" text="Rol: " />
-                                    <Button layoutX="73.0" layoutY="119.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" text="Add" />
+                                    <Button layoutX="73.0" layoutY="119.0" mnemonicParsing="false" onAction="#addUser" prefHeight="25.0" prefWidth="46.0" text="Add" />
                                     <MenuButton layoutX="77.0" layoutY="75.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Select...">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                         <MenuItem mnemonicParsing="false" text="Action 2" />
                                       </items>
                                     </MenuButton>
-                                    <TextField layoutX="78.0" layoutY="46.0" prefHeight="25.0" prefWidth="102.0" />
+                                    <TextField fx:id="usernameAddUser" layoutX="78.0" layoutY="46.0" prefHeight="25.0" prefWidth="102.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="-3.0" prefHeight="158.0" prefWidth="197.0" visible="false">
@@ -159,95 +156,101 @@
                            <children>
                               <AnchorPane fx:id="anchorPaneTaskInfo" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
                                  <children>
-                                    <Label layoutX="5.0" layoutY="178.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
-                                    <Label layoutX="6.0" layoutY="276.0" prefHeight="17.0" prefWidth="78.0" text="Creation date: " />
-                                    <Label layoutX="6.0" layoutY="300.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
-                                    <Label layoutX="5.0" layoutY="251.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
-                                    <Label layoutX="5.0" layoutY="202.0" prefHeight="17.0" prefWidth="78.0" text="Task number:" />
-                                    <Label layoutX="5.0" layoutY="226.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
-                                    <Label layoutX="6.0" layoutY="324.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
-                                    <Label layoutX="89.0" layoutY="178.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="203.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="226.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="251.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="277.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="301.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
-                                    <Label layoutX="89.0" layoutY="325.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
-                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="21.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <Label layoutX="5.0" layoutY="86.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="184.0" prefHeight="17.0" prefWidth="78.0" text="Creation date: " />
+                                    <Label layoutX="6.0" layoutY="208.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="159.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="110.0" prefHeight="17.0" prefWidth="78.0" text="Task number:" />
+                                    <Label layoutX="5.0" layoutY="134.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="232.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <Label layoutX="89.0" layoutY="86.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="111.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="134.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="159.0" prefHeight="17.0" prefWidth="98.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="185.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="209.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <Label layoutX="89.0" layoutY="233.0" prefHeight="17.0" prefWidth="97.0" text="None" textFill="#138618" />
+                                    <ImageView fitHeight="66.0" fitWidth="55.0" focusTraversable="true" layoutX="68.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@imgs/task.png" />
                                        </image>
                                     </ImageView>
+                                    <Label layoutX="6.0" layoutY="257.0" prefHeight="17.0" prefWidth="89.0" text="Description:" />
+                                    <TextArea editable="false" layoutX="5.0" layoutY="275.0" prefHeight="115.0" prefWidth="179.0" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="anchorPaneAddTask" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0">
+                              <AnchorPane fx:id="anchorPaneAddTask" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
                                  <children>
-                                    <Label layoutX="5.0" layoutY="173.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
-                                    <Label layoutX="6.0" layoutY="280.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
-                                    <Label layoutX="5.0" layoutY="244.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
-                                    <Label layoutX="5.0" layoutY="208.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
-                                    <Label layoutX="6.0" layoutY="313.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
-                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="27.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                                    <Label layoutX="5.0" layoutY="73.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="180.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="144.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="108.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="213.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <ImageView fitHeight="66.0" fitWidth="55.0" focusTraversable="true" layoutX="68.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@imgs/task.png" />
                                        </image>
                                     </ImageView>
-                                    <TextField fx:id="textFieldTaskName" layoutX="88.0" layoutY="169.0" prefHeight="25.0" prefWidth="99.0" />
-                                    <MenuButton fx:id="menuButtonPriority" layoutX="88.0" layoutY="204.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <TextField fx:id="textFieldTaskName" layoutX="88.0" layoutY="69.0" prefHeight="25.0" prefWidth="99.0" />
+                                    <MenuButton fx:id="menuButtonPriority" layoutX="88.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                         <MenuItem mnemonicParsing="false" text="Action 2" />
                                       </items>
                                     </MenuButton>
-                                    <MenuButton fx:id="menuButtonState" layoutX="88.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <MenuButton fx:id="menuButtonState" layoutX="88.0" layoutY="140.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                         <MenuItem mnemonicParsing="false" text="Action 2" />
                                       </items>
                                     </MenuButton>
-                                    <TextField fx:id="textFieldFinishedDate" layoutX="89.0" layoutY="276.0" prefHeight="25.0" prefWidth="98.0" />
-                                    <MenuButton fx:id="menuButtonAsgUsr" layoutX="89.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <TextField fx:id="textFieldFinishedDate" layoutX="89.0" layoutY="176.0" prefHeight="25.0" prefWidth="98.0" />
+                                    <MenuButton fx:id="menuButtonAsgUsr" layoutX="89.0" layoutY="210.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                         <MenuItem mnemonicParsing="false" text="Action 2" />
                                       </items>
                                     </MenuButton>
-                                    <Button fx:id="addTask" layoutX="63.0" layoutY="354.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Add" />
+                                    <Button layoutX="63.0" layoutY="365.0" mnemonicParsing="false" onAction="#addTask" prefHeight="25.0" prefWidth="53.0" text="Add" />
+                                    <Label layoutX="7.0" layoutY="246.0" prefHeight="17.0" prefWidth="89.0" text="Description: " />
+                                    <TextArea layoutX="7.0" layoutY="266.0" prefHeight="90.0" prefWidth="179.0" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane fx:id="anchorPaneEditTask" focusTraversable="true" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
+                              <AnchorPane fx:id="anchorPaneAddTask1" focusTraversable="true" layoutY="3.0" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="189.0" visible="false">
                                  <children>
-                                    <Label layoutX="5.0" layoutY="173.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
-                                    <Label layoutX="6.0" layoutY="280.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
-                                    <Label layoutX="5.0" layoutY="244.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
-                                    <Label layoutX="5.0" layoutY="208.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
-                                    <Label layoutX="6.0" layoutY="313.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
-                                    <ImageView fitHeight="137.0" fitWidth="191.0" focusTraversable="true" layoutX="27.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+                                    <Label layoutX="5.0" layoutY="73.0" prefHeight="17.0" prefWidth="78.0" text="Task name:" />
+                                    <Label layoutX="6.0" layoutY="180.0" prefHeight="17.0" prefWidth="71.0" text="Finish date:" />
+                                    <Label layoutX="5.0" layoutY="144.0" prefHeight="17.0" prefWidth="63.0" text="State: " />
+                                    <Label layoutX="5.0" layoutY="108.0" prefHeight="17.0" prefWidth="78.0" text="Priority: " />
+                                    <Label layoutX="6.0" layoutY="213.0" prefHeight="17.0" prefWidth="89.0" text="Assigned user: " />
+                                    <ImageView fitHeight="66.0" fitWidth="55.0" focusTraversable="true" layoutX="68.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@imgs/task.png" />
                                        </image>
                                     </ImageView>
-                                    <TextField layoutX="88.0" layoutY="169.0" prefHeight="25.0" prefWidth="99.0" />
-                                    <MenuButton layoutX="88.0" layoutY="204.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <TextField fx:id="textFieldTaskName1" layoutX="88.0" layoutY="69.0" prefHeight="25.0" prefWidth="99.0" />
+                                    <MenuButton fx:id="menuButtonPriority1" layoutX="88.0" layoutY="104.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                        <items>
                                           <MenuItem mnemonicParsing="false" text="Action 1" />
                                           <MenuItem mnemonicParsing="false" text="Action 2" />
                                        </items>
                                     </MenuButton>
-                                    <MenuButton layoutX="88.0" layoutY="240.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <MenuButton fx:id="menuButtonState1" layoutX="88.0" layoutY="140.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                        <items>
                                           <MenuItem mnemonicParsing="false" text="Action 1" />
                                           <MenuItem mnemonicParsing="false" text="Action 2" />
                                        </items>
                                     </MenuButton>
-                                    <TextField layoutX="89.0" layoutY="276.0" prefHeight="25.0" prefWidth="98.0" />
-                                    <MenuButton layoutX="89.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
+                                    <TextField fx:id="textFieldFinishedDate1" layoutX="89.0" layoutY="176.0" prefHeight="25.0" prefWidth="98.0" />
+                                    <MenuButton fx:id="menuButtonAsgUsr1" layoutX="89.0" layoutY="210.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="99.0" text="Select...">
                                        <items>
                                           <MenuItem mnemonicParsing="false" text="Action 1" />
                                           <MenuItem mnemonicParsing="false" text="Action 2" />
                                        </items>
                                     </MenuButton>
-                                    <Button layoutX="63.0" layoutY="354.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="Edit" />
+                                    <Button layoutX="68.0" layoutY="367.0" mnemonicParsing="false" onAction="#editTask" prefHeight="25.0" prefWidth="53.0" text="Edit" />
+                                    <Label layoutX="7.0" layoutY="246.0" prefHeight="17.0" prefWidth="89.0" text="Description: " />
+                                    <TextArea layoutX="7.0" layoutY="266.0" prefHeight="90.0" prefWidth="179.0" />
                                  </children>
                               </AnchorPane>
                            </children>

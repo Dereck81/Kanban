@@ -8,12 +8,21 @@ import pe.edu.utp.dsa.kanban.Kanban;
 
 import java.util.Objects;
 
-public class Role {
+public class Role implements Comparable<Role>{
+
+    @Override
+    public int compareTo(Role o) {
+        return this.rol.compareTo(o.getRol());
+    }
 
     private String rol;
 
     public Role(String rol){
         this.rol = rol;
+    }
+
+    public String getRol(){
+        return rol;
     }
 
     public Pane getPane(){
@@ -36,6 +45,7 @@ public class Role {
         return paneRol;
 
     }
+
 
 
 }
