@@ -16,7 +16,7 @@ public class Kanban extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Kanban.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1100, 533);
+        Scene scene = new Scene(fxmlLoader.load(), 1206, 615);
         KanbanController controller = fxmlLoader.getController();
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if(keyEvent.getCode().getName().equalsIgnoreCase("ESC"))

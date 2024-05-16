@@ -10,6 +10,7 @@ module pe.edu.utp.dsa.kanban {
     opens pe.edu.utp.dsa.kanban to javafx.fxml;
     exports pe.edu.utp.dsa.kanban;
     exports pe.edu.utp.dsa.kanban.Controllers;
+    exports pe.edu.utp.dsa.kanban.Utilities;
     opens pe.edu.utp.dsa.kanban.Controllers to javafx.fxml;
     exports pe.edu.utp.dsa.kanban.Task;
     opens pe.edu.utp.dsa.kanban.Task to javafx.fxml;

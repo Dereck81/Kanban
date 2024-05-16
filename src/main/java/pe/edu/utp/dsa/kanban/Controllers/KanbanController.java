@@ -1,8 +1,6 @@
 package pe.edu.utp.dsa.kanban.Controllers;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pe.edu.utp.dsa.kanban.ListView.ListCell;
 import pe.edu.utp.dsa.kanban.Task.KanbanTask;
-import pe.edu.utp.dsa.kanban.Utilities.PriorityQueue;
+import pe.edu.utp.dsa.kanban.Utilities.PrioritySortedLinkedList;
 import pe.edu.utp.dsa.kanban.Utilities.Role;
 import pe.edu.utp.dsa.kanban.Utilities.User;
 import pe.edu.utp.dsa.kanban.Utilities.Utilities;
@@ -18,6 +16,8 @@ import pe.edu.utp.dsa.kanban.Utilities.Utilities;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import static pe.edu.utp.dsa.kanban.Utilities.Utilities.truncateString;
 
 public class KanbanController {
 
@@ -49,42 +49,98 @@ public class KanbanController {
     @FXML
     private Menu menuOpenRecentFile;
     @FXML
-    private TextField usernameAddUser;
+    private TextField usernameAddUser, textFieldRole;
+    @FXML
+    private TextArea textAreaDescription;
+    @FXML
+    private MenuButton menuButtonRole;
+    @FXML
+    private Label labelTaskName, labelTaskNumber, labelPriority;
+    @FXML
+    private Label labelState, labelCreationDate, labelFinishDate;
+    @FXML
+    private Label labelAssignedUser;
+    @FXML
+    private TextArea textAreaDescription_info;
 
     //Others
     private ContextMenu contextMenuCatalogue = new ContextMenu();
     private ContextMenu contextMenuOthersColumns = new ContextMenu();
+    private ContextMenu contextMenuFinished = new ContextMenu();
     private FileChooser fileChooserOpen, fileChooserExportAsPDF;
     private File file;
 
     //Others
-    private boolean isDeselectionByUser = true;
-    private PriorityQueue<KanbanTask> queueCatalogue = new PriorityQueue<>();
-    private PriorityQueue<KanbanTask> queueToDo = new PriorityQueue<>();
-    private PriorityQueue<KanbanTask> queueInProgres = new PriorityQueue<>();
-    private PriorityQueue<KanbanTask> queueToBeChecked = new PriorityQueue<>();
-    private PriorityQueue<KanbanTask> queueFinished = new PriorityQueue<>();
-    private PriorityQueue<User> queueUser = new PriorityQueue<>();
-    private PriorityQueue<Role> queueRole = new PriorityQueue<>();
 
+    private ListView<KanbanTask> listViewSelected = null;
+    private PrioritySortedLinkedList<KanbanTask> linkedListSelected = null;
+    private PrioritySortedLinkedList<KanbanTask> linkedListPrevious = null;
+    private PrioritySortedLinkedList<KanbanTask> linkedListNext = null;
+    private PrioritySortedLinkedList<KanbanTask> linkedListCatalogue = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<KanbanTask> linkedListToDo = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<KanbanTask> linkedListInProgress = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<KanbanTask> linkedListToBeChecked = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<KanbanTask> linkedListFinished = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<User> linkedListUser = new PrioritySortedLinkedList<>();
+    private PrioritySortedLinkedList<Role> linkedListRole = new PrioritySortedLinkedList<>();
     private String ApplicationTitle = "Kanban Application - ";
+
+    //Others
+    private boolean isDeselectionByUser = true;
+    private Role selectedRole = null;
 
     @FXML
     public void initialize(){
-
-        titledPaneTaskOthers.expandedProperty().addListener(observable -> {
-            // falta eliminar los datos ingresados (resetear)
-            if(titledPaneTaskOthers.isCollapsible())
-                anchorPaneAddTask.setVisible(false);
-        });
-        loadDifferentFileChooser();
+        setupFileChoosers();
         updateRecentFiles();
-        configListView();
-        setContextMenuConfig();
+        setupListViews();
+        setupContextMenus();
         setOnEventOnListView();
+        setupTextAreas();
     }
 
-    private void configListView(){
+    // Open File
+    /**
+     * Opens a recently accessed file based on the selected menu item.
+     * @param pathRecentFile The path of the recently accessed file.
+     */
+    private void openRecentFile(String pathRecentFile){
+        file = new File(pathRecentFile);
+        if (!file.exists()){
+            Utilities.alert(
+                    "Error",
+                    "An Error ocurred",
+                    "file not found: "+pathRecentFile,
+                    Alert.AlertType.ERROR
+            );
+            Utilities.deleteRecentFilesRecord(pathRecentFile);
+            updateRecentFiles();
+            return;
+        }
+        getStage().setTitle(ApplicationTitle+file.getName());
+    }
+
+    /**
+     * Updates the list of recent files in the menu.
+     */
+    private void updateRecentFiles(){
+        ArrayList<String> recentFiles = Utilities.readRecordRecentFiles();
+        if (menuOpenRecentFile != null) menuOpenRecentFile.getItems().clear();
+        for (String pathRecentFile : recentFiles.toArray(new String[0])){
+            //use .substring
+            String[] arraySplit = pathRecentFile.split("[/\\\\\\\\]");
+            String nameFile = arraySplit[arraySplit.length - 1];
+            MenuItem menuItemRecentFile = new MenuItem(nameFile);
+            menuItemRecentFile.setOnAction(event -> {
+                openRecentFile(pathRecentFile);
+            });
+            menuOpenRecentFile.getItems().add(menuItemRecentFile);
+        }
+    }
+
+
+    // SETUPS
+    private void setupListViews(){
         listViewCatalogue.setCellFactory(param -> new ListCell<>());
         listViewToDo.setCellFactory(param -> new ListCell<>());
         listViewInProgress.setCellFactory(param -> new ListCell<>());
@@ -94,8 +150,81 @@ public class KanbanController {
         listViewRoles.setCellFactory(param -> new ListCell<>());
     }
 
+    private void setupTextAreas(){
+        textAreaDescription.setWrapText(true);
+        textAreaDescription_info.setWrapText(true);
+    }
 
-    private void loadDifferentFileChooser(){
+    private void setupTitlePanes(){
+        titledPaneTaskOthers.expandedProperty().addListener(observable -> {
+            // falta eliminar los datos ingresados (resetear)
+            if(titledPaneTaskOthers.isCollapsible())
+                anchorPaneAddTask.setVisible(false);
+        });
+    }
+
+    private void setupContextMenus(){
+        MenuItem menuItemDelete0 = new MenuItem("Delete Task");
+        menuItemDelete0.setOnAction(actionEvent -> {
+            // Modificar cuando en la linked list se añada
+            // restriccion para elementos unicos
+            int index = listViewSelected.getSelectionModel().getSelectedIndex();
+            linkedListSelected.removeItemAtIndex(index);
+            resetForm();
+            updateListView();
+        });
+
+        MenuItem menuItemDelete1 = new MenuItem("Delete Task");
+        menuItemDelete1.setOnAction(actionEvent -> {
+            // Modificar cuando en la linked list se añada
+            // restriccion para elementos unicos
+            int index = listViewSelected.getSelectionModel().getSelectedIndex();
+            linkedListSelected.removeItemAtIndex(index);
+            resetForm();
+            updateListView();
+        });
+
+        MenuItem menuItemEdit0 = new MenuItem("Edit task");
+        menuItemEdit0.setOnAction(actionEvent -> {
+            titledPaneTaskOthers.setExpanded(true);
+            anchorPaneEditTask.setVisible(true);
+            resetForm();
+        });
+
+        MenuItem menuItemEdit1 = new MenuItem("Edit task");
+        menuItemEdit1.setOnAction(actionEvent -> {
+            titledPaneTaskOthers.setExpanded(true);
+            anchorPaneEditTask.setVisible(true);
+            resetForm();
+        });
+
+        MenuItem menuItemBack = new MenuItem("Back column");
+        menuItemBack.setOnAction(actionEvent -> {
+            int index = listViewSelected.getSelectionModel().getSelectedIndex();
+            try{
+                KanbanTask ktb = linkedListSelected.getElement(index);
+                linkedListSelected.removeItemAtIndex(index);
+                linkedListPrevious.add(ktb);
+            }catch (Exception ignored){}
+            updateListView();
+        });
+        MenuItem menuItemNext = new MenuItem("Next column");
+        menuItemNext.setOnAction(actionEvent -> {
+            int index = listViewSelected.getSelectionModel().getSelectedIndex();
+            try {
+                KanbanTask ktb = linkedListSelected.getElement(index);
+                linkedListSelected.removeItemAtIndex(index);
+                linkedListNext.add(ktb);
+            }catch (Exception ignored){}
+            updateListView();
+        });
+        contextMenuCatalogue.getItems().setAll(menuItemDelete0, menuItemEdit0);
+        contextMenuOthersColumns.getItems().setAll(menuItemEdit1, menuItemBack, menuItemNext);
+        contextMenuFinished.getItems().setAll(menuItemDelete1);
+
+    }
+
+    private void setupFileChoosers(){
         // fileChooserOpen
         fileChooserOpen = new FileChooser();
         fileChooserOpen.setTitle("Find File");
@@ -108,20 +237,6 @@ public class KanbanController {
         fileChooserExportAsPDF.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("PDF", "*.pdf")
         );
-    }
-
-    private void setContextMenuConfig(){
-        MenuItem menuItemDelete = new MenuItem("Delete Task");
-        menuItemDelete.setOnAction(actionEvent -> {});
-        MenuItem menuItemEdit = new MenuItem("Edit task");
-        menuItemEdit.setOnAction(actionEvent -> {});
-        MenuItem menuItemBack = new MenuItem("Back column");
-        menuItemBack.setOnAction(actionEvent -> {});
-        MenuItem menuItemNext = new MenuItem("Next column");
-        menuItemNext.setOnAction(actionEvent -> {
-        });
-        contextMenuCatalogue.getItems().addAll(menuItemDelete, menuItemEdit);
-        contextMenuOthersColumns.getItems().addAll(menuItemBack, menuItemNext);
     }
 
     public void setOnEventOnListView(){
@@ -137,13 +252,19 @@ public class KanbanController {
         });
         listViewCatalogue.getSelectionModel()
                 .selectedIndexProperty()
-                .addListener(observable -> {
+                .addListener((observable, oldvalue, newvalue) -> {
                     if(!isDeselectionByUser) return;
                     deselectListCell(
                             listViewToDo,
                             listViewInProgress,
                             listViewToBeChecked,
                             listViewFinished);
+                    listViewSelected = listViewCatalogue;
+                    linkedListSelected = linkedListCatalogue;
+                    linkedListPrevious = null;
+                    linkedListNext = linkedListToDo;
+                    taskInfo();
+
                 });
         //listViewToDo
         listViewToDo.setContextMenu(contextMenuOthersColumns);
@@ -161,6 +282,11 @@ public class KanbanController {
                             listViewInProgress,
                             listViewFinished
                     );
+                    listViewSelected = listViewToDo;
+                    linkedListSelected = linkedListToDo;
+
+                    linkedListPrevious = linkedListCatalogue;
+                    linkedListNext = linkedListInProgress;
                 }));
         //listViewInProgress
         listViewInProgress.setContextMenu(contextMenuOthersColumns);
@@ -179,6 +305,11 @@ public class KanbanController {
                             listViewToDo,
                             listViewFinished
                     );
+                    listViewSelected = listViewInProgress;
+                    linkedListSelected = linkedListInProgress;
+
+                    linkedListPrevious = linkedListToDo;
+                    linkedListNext = linkedListToBeChecked;
         });
         //listViewToBeChecked
         listViewToBeChecked.setContextMenu(contextMenuOthersColumns);
@@ -192,8 +323,15 @@ public class KanbanController {
                             listViewFinished,
                             listViewInProgress
                     );
+                    listViewSelected = listViewToBeChecked;
+                    linkedListSelected = linkedListToBeChecked;
+
+                    linkedListPrevious = linkedListInProgress;
+                    linkedListNext = linkedListFinished;
+
         });
         //listViewFinished
+        listViewFinished.setContextMenu(contextMenuFinished);
         listViewFinished.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable -> {
@@ -205,6 +343,10 @@ public class KanbanController {
                             listViewToBeChecked,
                             listViewFinished
                     );
+                    listViewSelected = listViewFinished;
+                    linkedListSelected = linkedListFinished;
+                    linkedListPrevious = null;
+                    linkedListNext = null;
                 }));
         //
     }
@@ -212,9 +354,9 @@ public class KanbanController {
     @SafeVarargs
     public final void deselectListCell(ListView<KanbanTask>...lists){
         isDeselectionByUser = false;
-        for (int i = 0; i < lists.length; i++) {
-            boolean flag = lists[i].getSelectionModel().getSelectedItems().isEmpty();
-            if (!flag) lists[i].getSelectionModel().clearSelection();
+        for (ListView<KanbanTask> list : lists) {
+            boolean flag = list.getSelectionModel().getSelectedItems().isEmpty();
+            if (!flag) list.getSelectionModel().clearSelection();
         }
         isDeselectionByUser = true;
     }
@@ -229,14 +371,28 @@ public class KanbanController {
 
     @FXML
     private void executeTitledPaneTask(){
+        anchorPaneEditTask.setVisible(false);
+        anchorPaneTaskInfo.setVisible(false);
         titledPaneTaskOthers.setExpanded(true);
         anchorPaneAddTask.setVisible(true);
     }
 
     @FXML
-    private void addRole(){
-
-
+    private void addRole() throws Exception {
+        String textRole = textFieldRole.getText();
+        if(textRole.isEmpty() || textRole.isBlank()) {
+            Utilities.alert(
+                    "Error",
+                    "Error adding role",
+                    "The role name is empty.",
+                    Alert.AlertType.ERROR
+            );
+            return;
+        }
+        linkedListRole.add(new Role(textRole));
+        updateListView(listViewRoles, linkedListRole);
+        updateMenuButtonRole();
+        textFieldRole.clear();
     }
 
     @FXML
@@ -251,17 +407,57 @@ public class KanbanController {
 
     @FXML
     private void editTask(){
+        KanbanTask ktb = listViewSelected.getSelectionModel().getSelectedItem();
 
     }
 
     @FXML
     private void taskInfo(){
+        int index = listViewSelected.getSelectionModel().getSelectedIndex();
+        KanbanTask task;
+        resetForm();
+        try {
+            task = linkedListSelected.getElement(index);
+        } catch (Exception ignore) {
+            return;
+        }
+        anchorPaneAddTask.setVisible(false);
+        anchorPaneEditTask.setVisible(false);
+        titledPaneTaskOthers.setExpanded(true);
+        anchorPaneTaskInfo.setVisible(true);
+        labelTaskName.setText(truncateString(task.getName(), 30));
+        labelTaskNumber.setText(String.valueOf(task.getNumberTask()));
+        labelPriority.setText(String.valueOf(task.getPriority()));
+        labelCreationDate.setText(task.getRegistrationDate().toString());
+        labelFinishDate.setText(task.getFinishDate().toString());
+        labelAssignedUser.setText(
+                truncateString(task.getuserAssignedToTheTask(), 28)
+        );
+        textAreaDescription_info.setText(task.getDescription());
+    }
+
+    private void resetForm(){
+        //task info
+        labelTaskName.setText("None");
+        labelTaskNumber.setText("None");
+        labelPriority.setText("None");
+        labelCreationDate.setText("None");
+        labelFinishDate.setText("None");
+        labelAssignedUser.setText("None");
+        textAreaDescription_info.setText("");
+        //add user
+        textFieldTaskName.clear();
+        textFieldFinishedDate.clear();
+        textAreaDescription.clear();
+        menuButtonPriority.setText("Select...");
+        //priority
+
 
     }
 
     @FXML
     private void addUser() throws Exception {
-        if(usernameAddUser.getText().isEmpty()) {
+        if(usernameAddUser.getText().isEmpty() || selectedRole == null) {
             Utilities.alert(
                     "Error",
                     "Error when adding a user",
@@ -270,23 +466,28 @@ public class KanbanController {
             );
             return;
         }
-        queueUser.add(new User(usernameAddUser.getText(), "Jefe"));
-        listViewUsers.getItems().setAll(queueUser.toList());
+        linkedListUser.add(new User(usernameAddUser.getText(), selectedRole));
+        listViewUsers.getItems().setAll(linkedListUser.toList());
+        updateListView(listViewUsers, linkedListUser);
+        menuButtonRole.setText("");
+        usernameAddUser.clear();
+        selectedRole = null;
     }
 
     @FXML
     private void addTask() throws Exception {
+
+
         try {
-            queueCatalogue.add(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()));
+            linkedListCatalogue.add(new KanbanTask("Golas","Diego Ochoa", "Diego Ochoa", "asd", 2, 3, "Prueba", LocalDate.now()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        listViewCatalogue.getItems().setAll(queueCatalogue.toList());;
+        listViewCatalogue.getItems().setAll(linkedListCatalogue.toList());;
+        anchorPaneAddTask.setVisible(false);
+        titledPaneTaskOthers.setExpanded(false);
     }
 
-    private void showAnchorPaneAddTask(){
-
-    }
 
 
     @FXML
@@ -320,49 +521,42 @@ public class KanbanController {
 
     }
 
-    /**
-     * Opens a recently accessed file based on the selected menu item.
-     * @param pathRecentFile The path of the recently accessed file.
-     */
-    private void openRecentFile(String pathRecentFile){
-        file = new File(pathRecentFile);
-        if (!file.exists()){
-            Utilities.alert(
-                    "Error",
-                    "An Error ocurred",
-                    "file not found: "+pathRecentFile,
-                    Alert.AlertType.ERROR
-            );
-            Utilities.deleteRecentFilesRecord(pathRecentFile);
-            updateRecentFiles();
-            return;
-        }
-        getStage().setTitle(ApplicationTitle+file.getName());
+    private void updateListViews(){
+        listViewCatalogue.getItems().setAll(linkedListCatalogue.toList());
+        listViewToDo.getItems().setAll(linkedListToDo.toList());
+        listViewToBeChecked.getItems().setAll(linkedListToBeChecked.toList());
+        listViewInProgress.getItems().setAll(linkedListInProgress.toList());
+        listViewFinished.getItems().setAll(linkedListFinished.toList());
     }
 
-    /**
-     * Updates the list of recent files in the menu.
-     */
-    private void updateRecentFiles(){
-        ArrayList<String> recentFiles = Utilities.readRecordRecentFiles();
-        if (menuOpenRecentFile != null) menuOpenRecentFile.getItems().clear();
-        for (String pathRecentFile : recentFiles.toArray(new String[0])){
-            String[] arraySplit = pathRecentFile.split("[/\\\\\\\\]");
-            String nameFile = arraySplit[arraySplit.length - 1];
-            MenuItem menuItemRecentFile = new MenuItem(nameFile);
-            menuItemRecentFile.setOnAction(event -> {
-                openRecentFile(pathRecentFile);
+    private void updateListView(){
+        listViewSelected.getItems().setAll(linkedListSelected.toList());
+    }
+
+    private void updateMenuButtonRole(){
+        menuButtonRole.getItems().clear();
+        for (Role role: linkedListRole){
+            MenuItem menuItem = new MenuItem(role.getRolName());
+            menuItem.setOnAction(actionEvent -> {
+                menuButtonRole.setText(role.getRolName());
+                selectedRole = role;
             });
-            menuOpenRecentFile.getItems().add(menuItemRecentFile);
+            menuButtonRole.getItems().add(menuItem);
         }
+        selectedRole = null;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void updateListView(ListView listView, PrioritySortedLinkedList linkedList){
+        listView.getItems().setAll(linkedList.toList());
     }
 
     @FXML
     public void init(){
-        listViewRoles.getItems().add(new Role("Administracion"));
-        listViewUsers.getItems().add(new User("Kevin Huanca Fernández", "estudiante d jorgito uwu"));
-        listViewToDo.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()));
-        listViewCatalogue.getItems().addAll(new KanbanTask("Diego Maricon", "Diego Maricon", "asd", 2, 3, LocalDate.now()));
+        listViewUsers.getItems().add(new User("Kevin Huanca Fernández", new Role("estudiante")));
+        listViewToDo.getItems().addAll(new KanbanTask("sdsd", "Diego Ochoa asdasdasd asd asdasd assd", "Diego Ochoa asdasd sad asd sa sd sa d a sd", "asd", 2, 3, "Hola esto es prueba", LocalDate.now()));
+        listViewCatalogue.getItems().addAll(new KanbanTask("asdasd","1234567891234568912345678", "Diego Ochoa", "asd", 2, 5, "Gola asddasd ",LocalDate.now()));
+        listViewCatalogue.getItems().addAll(new KanbanTask("asdsad","Diego Ochoa", "Diego Ochoa", "asd", 2, 1, "Gola asddasd ",LocalDate.now()));
     }
 
     private Stage getStage(){

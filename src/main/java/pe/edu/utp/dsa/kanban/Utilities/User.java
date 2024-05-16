@@ -5,22 +5,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import pe.edu.utp.dsa.kanban.Kanban;
-
+import static pe.edu.utp.dsa.kanban.Utilities.Utilities.capitalize;
 import java.util.Objects;
 
 public class User implements Comparable<User>{
 
-    @Override
-    public int compareTo(User o) {
-        return this.name.compareTo(o.getName())*-1;
-    }
-
     private String name;
-    private String rol;
+    private Role rol;
 
 
-    public User(String name, String rol){
-        this.name = name;
+    public User(String name, Role rol){
+        this.name = capitalize(name);
         this.rol = rol;
     }
 
@@ -29,22 +24,39 @@ public class User implements Comparable<User>{
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = capitalize(name);
     }
 
-    public String getRol() {
+    public Role getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Role rol) {
         this.rol = rol;
+    }
+
+    @Override
+    public int compareTo(User o) {
+        if(this.name.compareTo(o.getName())*-1 != 0)
+            return this.name.compareTo(o.getName())*-1;
+        else
+            return this.rol.getRolName().compareTo(o.getRol().getRolName())*-1;
+    }
+
+    public boolean equals(User obj){
+        if(name.equals(obj.getName()))
+            return rol.equals(obj.getRol());
+        return false;
     }
 
     public Pane getPane(){
         double height = 35;
-        Pane paneUser = new Pane();
+
         Label name = new Label(this.name);
-        Label rol = new Label("Rol: "+this.rol);
+        Label rol = new Label("Rol: "+this.rol.getRolName());
+
+        Pane paneUser = new Pane();
+
         ImageView imageViewRol = new ImageView(new Image(Objects.requireNonNull(Kanban.class.getResource("imgs/rol.png")).getFile()
                 .replaceAll("%20", " ").substring(1)));
         ImageView imageViewUser = new ImageView(new Image(Objects.requireNonNull(Kanban.class.getResource("imgs/user.png")).getFile()
@@ -70,7 +82,6 @@ public class User implements Comparable<User>{
 
         return paneUser;
     }
-
 
 
 }

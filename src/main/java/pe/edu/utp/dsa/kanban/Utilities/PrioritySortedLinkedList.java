@@ -3,9 +3,8 @@ package pe.edu.utp.dsa.kanban.Utilities;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
+public class PrioritySortedLinkedList<T extends Comparable<T>> implements Iterable<T> {
 
-    //
     @Override
     public Iterator<T> iterator() {
         return new Iterator<>() {
@@ -55,13 +54,23 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
 
     private int numberOfNodes = 0;
 
-    public PriorityQueue(){
+    public PrioritySortedLinkedList(){
+        head = null;
+        end = null;
     }
 
-    public PriorityQueue(T element){
+    public PrioritySortedLinkedList(T element){
         head = new Node<>(element);
         end = head;
         numberOfNodes++;
+    }
+
+    public boolean isEmpty(){
+        return numberOfNodes == 0;
+    }
+
+    public int size(){
+        return numberOfNodes;
     }
 
     public void add(T element) throws Exception {
@@ -75,6 +84,7 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
 
         for (int i = 0; i < numberOfNodes; i++) {
             Node<T> current = getNode(i);
+            assert current != null;
             if (element.compareTo(current.getElement()) >= 0) {
                 add(i, element);
                 return;
@@ -86,18 +96,82 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
         addLast(element);
     }
 
+    public T getElement(int index) throws Exception {
+        return Objects.requireNonNull(getNode(index)).getElement();
+    }
+
+    public T poll(){
+        try{
+            return remove();
+        }catch (NoSuchElementException e){
+            return null;
+        }
+    }
+
+    public T peek(){
+        try{
+            return getItemWithHighestPriority();
+        }catch (NoSuchElementException e){
+            return null;
+        }
+    }
+
+    public void setElement(int index, T element) throws Exception {
+        Node<T> targetNode = getNode(index);
+        assert targetNode != null;
+        T targetElement = targetNode.getElement();
+        // Here we compare by priority, not by equality
+        // in content of the objects.
+        if(element.compareTo(targetElement) == 0){
+            targetNode.setElement(element);
+            return;
+        }
+        remove(index);
+        add(element);
+    }
+
+    private void remove(int index) throws Exception{
+        if(index == 0){
+            removeFirst();
+            return;
+        } else if (index == numberOfNodes-1) {
+            removeLast();
+            return;
+        }
+        Node<T> prevNode = getNode(index-1);
+        Node<T> nextNode = getNode(index+1);
+        assert prevNode != null;
+        prevNode.getNext().setNext(null); // targetNode
+        prevNode.setNext(nextNode);
+        numberOfNodes--;
+    }
+
+    public boolean removeItemAtIndex(int index) {
+        try {
+            remove(index);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     private void add(int index, T element) throws Exception{
         if(index < 0 || index >= numberOfNodes)
             throw new IndexOutOfBoundsException("Index out of range");
         if(index == 0) {
             addFirst(element);
             return;
-        }
+        }/*
+        This conditional causes problems when entering an element
+        in the last position (replacing that element in said index,
+        Example: Position 5 and passing it to 6 instead of passing
+        the element that was in position 5 to 6 and the new element
+        to the 5).
         else if(index == numberOfNodes-1){
             addLast(element);
             return;
         }
-
+        */
         Node<T> newNode = new Node<>(element);
         Node<T> prevNode = getNode(index-1);
         assert prevNode != null;
@@ -117,10 +191,9 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
         Node<T> newNode = new Node<>(element);
         newNode.setNext(head);
         head = newNode;
-        if(isEmpty()) end = head;
         numberOfNodes++;
+        if(isEmpty()) end = head;
     }
-
 
     private Node<T> getNode(int index) throws Exception{
         if(isEmpty()) return null;
@@ -134,53 +207,29 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
         return current;
     }
 
-    public boolean isEmpty(){
-        return numberOfNodes == 0;
-    }
-
-    public int size(){
-        return numberOfNodes;
-    }
-
-    public T element() throws NoSuchElementException {
+    private T getItemWithHighestPriority() throws NoSuchElementException {
         try{
-            return getNode(0).getElement();
+            return Objects.requireNonNull(getNode(0)).getElement();
         }catch (Exception e){
             throw new NoSuchElementException("Empty queue");
         }
     }
 
-    public T peek(){
-        try{
-            return element();
-        }catch (NoSuchElementException e){
-            return null;
-        }
+    private void removeFirst() {
+        Node<T> newNode = head.getNext();
+        head.setNext(null);
+        head = newNode;
+        numberOfNodes--;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<T> toList(){
-
-        Object[] arr = new Object[numberOfNodes];
-        Node<T> current = head;
-        for (int i = 0; i < numberOfNodes; i++) {
-            System.out.println(i);
-            arr[i] = current.getElement();
-            current = current.getNext();
-        }
-        return Stream.of(arr).map(i -> (T) i).toList();
+    private void removeLast() throws Exception{
+        Node<T> prevNode = getNode(numberOfNodes-2);
+        Objects.requireNonNull(prevNode).setNext(null);
+        end = prevNode;
+        numberOfNodes--;
     }
 
-    public boolean offer(T element){
-        try{
-            add(element);
-        }catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-
-    public T remove() throws NoSuchElementException{
+    private T remove() throws NoSuchElementException{
         if(isEmpty()) throw new NoSuchElementException("Empty queue");
         Node<T> remove = head;
         if(numberOfNodes == 1){
@@ -196,12 +245,15 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
         return remove.getElement();
     }
 
-    public T poll(){
-        try{
-            return remove();
-        }catch (NoSuchElementException e){
-            return null;
+    @SuppressWarnings("unchecked")
+    public List<T> toList(){
+        Object[] arr = new Object[numberOfNodes];
+        Node<T> current = head;
+        for (int i = 0; i < numberOfNodes; i++) {
+            arr[i] = current.getElement();
+            current = current.getNext();
         }
+        return Stream.of(arr).map(i -> (T) i).toList();
     }
 
 }
