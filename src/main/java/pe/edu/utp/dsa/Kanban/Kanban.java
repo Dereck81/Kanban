@@ -19,8 +19,10 @@ public class Kanban extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1206, 615);
         KanbanController controller = fxmlLoader.getController();
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if(keyEvent.getCode().getName().equalsIgnoreCase("ESC"))
+            if(keyEvent.getCode().getName().equalsIgnoreCase("ESC")) {
                 controller.deselectAllListCell();
+                controller.resetForm();
+            }
         });
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles/styles.css")).toExternalForm());
         stage.setTitle("Kanban Application");

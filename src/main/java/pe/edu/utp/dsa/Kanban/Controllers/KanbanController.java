@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 import pe.edu.utp.dsa.Kanban.ListView.ListCell;
 import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
 import pe.edu.utp.dsa.DSA.PriorityQueue;
-import pe.edu.utp.dsa.Kanban.Utilities.Role;
-import pe.edu.utp.dsa.Kanban.Utilities.User;
+import pe.edu.utp.dsa.Kanban.Task.Role;
+import pe.edu.utp.dsa.Kanban.Task.User;
 import pe.edu.utp.dsa.Kanban.Utilities.Utilities;
 
 import java.io.File;
@@ -436,7 +436,7 @@ public class KanbanController {
         textAreaDescription_info.setText(task.getDescription());
     }
 
-    private void resetForm(){
+    public void resetForm(){
         //task info
         labelTaskName.setText("None");
         labelTaskNumber.setText("None");

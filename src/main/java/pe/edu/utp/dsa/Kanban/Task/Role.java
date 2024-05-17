@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.Kanban.Utilities;
+package pe.edu.utp.dsa.Kanban.Task;
 
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
