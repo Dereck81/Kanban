@@ -3,7 +3,7 @@ package pe.edu.utp.dsa.kanban.Utilities;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class PrioritySortedLinkedList<T extends Comparable<T>> implements Iterable<T> {
+public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
@@ -54,12 +54,12 @@ public class PrioritySortedLinkedList<T extends Comparable<T>> implements Iterab
 
     private int numberOfNodes = 0;
 
-    public PrioritySortedLinkedList(){
+    public PriorityQueue(){
         head = null;
         end = null;
     }
 
-    public PrioritySortedLinkedList(T element){
+    public PriorityQueue(T element){
         head = new Node<>(element);
         end = head;
         numberOfNodes++;
@@ -98,6 +98,15 @@ public class PrioritySortedLinkedList<T extends Comparable<T>> implements Iterab
 
     public T getElement(int index) throws Exception {
         return Objects.requireNonNull(getNode(index)).getElement();
+    }
+
+    public boolean offer(T element){
+        try{
+            add(element);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     public T poll(){

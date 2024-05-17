@@ -97,7 +97,7 @@ public class Utilities {
             if(!(str_.isBlank() || str_.isEmpty())){
                 char firstLetter = str_.charAt(0);
                 result.append(Character.toUpperCase(firstLetter));
-                result.append(str_.substring(1))
+                result.append(str_.substring(1).toLowerCase())
                         .append(" ");
             }
         }

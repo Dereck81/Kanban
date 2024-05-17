@@ -13,6 +13,8 @@ import static pe.edu.utp.dsa.kanban.Utilities.Utilities.truncateString;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.stream.Stream;
+
 public class KanbanTask implements Comparable<KanbanTask>{
 
     private String name;
@@ -70,7 +72,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
 
     public boolean equals(KanbanTask kbt){
         for (int i = 0; i < propertyGetters.length; i++) {
-            if(!propertyGetters[i].gets().equals(kbt.propertyGetters[i]))
+            if(!propertyGetters[i].gets().equals(kbt.propertyGetters[i].gets()))
                 return false;
         }
         return true;

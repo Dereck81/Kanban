@@ -8,7 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pe.edu.utp.dsa.kanban.ListView.ListCell;
 import pe.edu.utp.dsa.kanban.Task.KanbanTask;
-import pe.edu.utp.dsa.kanban.Utilities.PrioritySortedLinkedList;
+import pe.edu.utp.dsa.kanban.Utilities.PriorityQueue;
 import pe.edu.utp.dsa.kanban.Utilities.Role;
 import pe.edu.utp.dsa.kanban.Utilities.User;
 import pe.edu.utp.dsa.kanban.Utilities.Utilities;
@@ -73,16 +73,16 @@ public class KanbanController {
     //Others
 
     private ListView<KanbanTask> listViewSelected = null;
-    private PrioritySortedLinkedList<KanbanTask> linkedListSelected = null;
-    private PrioritySortedLinkedList<KanbanTask> linkedListPrevious = null;
-    private PrioritySortedLinkedList<KanbanTask> linkedListNext = null;
-    private PrioritySortedLinkedList<KanbanTask> linkedListCatalogue = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<KanbanTask> linkedListToDo = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<KanbanTask> linkedListInProgress = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<KanbanTask> linkedListToBeChecked = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<KanbanTask> linkedListFinished = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<User> linkedListUser = new PrioritySortedLinkedList<>();
-    private PrioritySortedLinkedList<Role> linkedListRole = new PrioritySortedLinkedList<>();
+    private PriorityQueue<KanbanTask> linkedListSelected = null;
+    private PriorityQueue<KanbanTask> linkedListPrevious = null;
+    private PriorityQueue<KanbanTask> linkedListNext = null;
+    private PriorityQueue<KanbanTask> linkedListCatalogue = new PriorityQueue<>();
+    private PriorityQueue<KanbanTask> linkedListToDo = new PriorityQueue<>();
+    private PriorityQueue<KanbanTask> linkedListInProgress = new PriorityQueue<>();
+    private PriorityQueue<KanbanTask> linkedListToBeChecked = new PriorityQueue<>();
+    private PriorityQueue<KanbanTask> linkedListFinished = new PriorityQueue<>();
+    private PriorityQueue<User> linkedListUser = new PriorityQueue<>();
+    private PriorityQueue<Role> linkedListRole = new PriorityQueue<>();
     private String ApplicationTitle = "Kanban Application - ";
 
     //Others
@@ -547,7 +547,7 @@ public class KanbanController {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void updateListView(ListView listView, PrioritySortedLinkedList linkedList){
+    private void updateListView(ListView listView, PriorityQueue linkedList){
         listView.getItems().setAll(linkedList.toList());
     }
 
