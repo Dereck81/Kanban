@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban.ListView;
+package pe.edu.utp.dsa.Kanban.ListView;
 
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;

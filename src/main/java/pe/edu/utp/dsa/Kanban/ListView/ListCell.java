@@ -1,8 +1,8 @@
-package pe.edu.utp.dsa.kanban.ListView;
+package pe.edu.utp.dsa.Kanban.ListView;
 
-import pe.edu.utp.dsa.kanban.Utilities.Role;
-import pe.edu.utp.dsa.kanban.Task.KanbanTask;
-import pe.edu.utp.dsa.kanban.Utilities.User;
+import pe.edu.utp.dsa.Kanban.Utilities.Role;
+import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
+import pe.edu.utp.dsa.Kanban.Utilities.User;
 
 public class ListCell<T> extends javafx.scene.control.ListCell<T>{
     @Override

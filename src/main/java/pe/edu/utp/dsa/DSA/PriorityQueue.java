@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban.Utilities;
+package pe.edu.utp.dsa.DSA;
 
 import java.util.*;
 import java.util.stream.Stream;

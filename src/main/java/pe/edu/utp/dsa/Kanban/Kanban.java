@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban;
+package pe.edu.utp.dsa.Kanban;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import pe.edu.utp.dsa.kanban.Controllers.KanbanController;
+import pe.edu.utp.dsa.Kanban.Controllers.KanbanController;
 
 import java.io.IOException;
 import java.util.Objects;

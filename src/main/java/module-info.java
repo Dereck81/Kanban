@@ -7,11 +7,12 @@ module pe.edu.utp.dsa.kanban {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens pe.edu.utp.dsa.kanban to javafx.fxml;
-    exports pe.edu.utp.dsa.kanban;
-    exports pe.edu.utp.dsa.kanban.Controllers;
-    exports pe.edu.utp.dsa.kanban.Utilities;
-    opens pe.edu.utp.dsa.kanban.Controllers to javafx.fxml;
-    exports pe.edu.utp.dsa.kanban.Task;
-    opens pe.edu.utp.dsa.kanban.Task to javafx.fxml;
+    opens pe.edu.utp.dsa.Kanban to javafx.fxml;
+    exports pe.edu.utp.dsa.Kanban;
+    exports pe.edu.utp.dsa.Kanban.Controllers;
+    exports pe.edu.utp.dsa.Kanban.Utilities;
+    opens pe.edu.utp.dsa.Kanban.Controllers to javafx.fxml;
+    exports pe.edu.utp.dsa.Kanban.Task;
+    opens pe.edu.utp.dsa.Kanban.Task to javafx.fxml;
+	exports pe.edu.utp.dsa.DSA;
 }

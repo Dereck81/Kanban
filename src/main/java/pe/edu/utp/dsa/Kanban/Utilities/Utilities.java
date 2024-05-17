@@ -1,7 +1,7 @@
-package pe.edu.utp.dsa.kanban.Utilities;
+package pe.edu.utp.dsa.Kanban.Utilities;
 
 import javafx.scene.control.Alert;
-import pe.edu.utp.dsa.kanban.Kanban;
+import pe.edu.utp.dsa.Kanban.Kanban;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.xml;
+package pe.edu.utp.dsa.XML;
 
 import pe.edu.utp.dsa.DSA.DynamicArray;
 import pe.edu.utp.dsa.DSA.Tuple;

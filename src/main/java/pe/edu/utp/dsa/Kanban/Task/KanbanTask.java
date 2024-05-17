@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban.Task;
+package pe.edu.utp.dsa.Kanban.Task;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
@@ -7,13 +7,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import pe.edu.utp.dsa.kanban.Kanban;
+import pe.edu.utp.dsa.Kanban.Kanban;
 
-import static pe.edu.utp.dsa.kanban.Utilities.Utilities.truncateString;
+import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class KanbanTask implements Comparable<KanbanTask>{
 

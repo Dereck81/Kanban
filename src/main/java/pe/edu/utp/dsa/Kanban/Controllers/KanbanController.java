@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban.Controllers;
+package pe.edu.utp.dsa.Kanban.Controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -6,18 +6,18 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import pe.edu.utp.dsa.kanban.ListView.ListCell;
-import pe.edu.utp.dsa.kanban.Task.KanbanTask;
-import pe.edu.utp.dsa.kanban.Utilities.PriorityQueue;
-import pe.edu.utp.dsa.kanban.Utilities.Role;
-import pe.edu.utp.dsa.kanban.Utilities.User;
-import pe.edu.utp.dsa.kanban.Utilities.Utilities;
+import pe.edu.utp.dsa.Kanban.ListView.ListCell;
+import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
+import pe.edu.utp.dsa.DSA.PriorityQueue;
+import pe.edu.utp.dsa.Kanban.Utilities.Role;
+import pe.edu.utp.dsa.Kanban.Utilities.User;
+import pe.edu.utp.dsa.Kanban.Utilities.Utilities;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static pe.edu.utp.dsa.kanban.Utilities.Utilities.truncateString;
+import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
 
 public class KanbanController {
 

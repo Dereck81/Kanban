@@ -1,11 +1,11 @@
-package pe.edu.utp.dsa.kanban.Utilities;
+package pe.edu.utp.dsa.Kanban.Utilities;
 
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import pe.edu.utp.dsa.kanban.Kanban;
-import static pe.edu.utp.dsa.kanban.Utilities.Utilities.capitalize;
+import pe.edu.utp.dsa.Kanban.Kanban;
+import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.capitalize;
 import java.util.Objects;
 
 public class User implements Comparable<User>{

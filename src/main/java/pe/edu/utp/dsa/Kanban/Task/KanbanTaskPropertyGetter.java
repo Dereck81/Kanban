@@ -1,4 +1,4 @@
-package pe.edu.utp.dsa.kanban.Task;
+package pe.edu.utp.dsa.Kanban.Task;
 
 @FunctionalInterface
 public interface KanbanTaskPropertyGetter<T> {
