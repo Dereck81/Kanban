@@ -169,7 +169,7 @@ public class KanbanController {
             // Modificar cuando en la linked list se añada
             // restriccion para elementos unicos
             int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            linkedListSelected.removeItemAtIndex(index);
+            linkedListSelected.removeAt(index);
             resetForm();
             updateListView();
         });
@@ -179,7 +179,7 @@ public class KanbanController {
             // Modificar cuando en la linked list se añada
             // restriccion para elementos unicos
             int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            linkedListSelected.removeItemAtIndex(index);
+            linkedListSelected.removeAt(index);
             resetForm();
             updateListView();
         });
@@ -203,8 +203,8 @@ public class KanbanController {
             int index = listViewSelected.getSelectionModel().getSelectedIndex();
             try{
                 KanbanTask ktb = linkedListSelected.getElement(index);
-                linkedListSelected.removeItemAtIndex(index);
-                linkedListPrevious.add(ktb);
+                linkedListSelected.removeAt(index);
+                linkedListPrevious.enqueue(ktb);
             }catch (Exception ignored){}
             updateListView();
         });
@@ -213,8 +213,8 @@ public class KanbanController {
             int index = listViewSelected.getSelectionModel().getSelectedIndex();
             try {
                 KanbanTask ktb = linkedListSelected.getElement(index);
-                linkedListSelected.removeItemAtIndex(index);
-                linkedListNext.add(ktb);
+                linkedListSelected.removeAt(index);
+                linkedListNext.enqueue(ktb);
             }catch (Exception ignored){}
             updateListView();
         });
@@ -389,7 +389,7 @@ public class KanbanController {
             );
             return;
         }
-        linkedListRole.add(new Role(textRole));
+        linkedListRole.enqueue(new Role(textRole));
         updateListView(listViewRoles, linkedListRole);
         updateMenuButtonRole();
         textFieldRole.clear();
@@ -466,7 +466,7 @@ public class KanbanController {
             );
             return;
         }
-        linkedListUser.add(new User(usernameAddUser.getText(), selectedRole));
+        linkedListUser.enqueue(new User(usernameAddUser.getText(), selectedRole));
         listViewUsers.getItems().setAll(linkedListUser.toList());
         updateListView(listViewUsers, linkedListUser);
         menuButtonRole.setText("");
@@ -479,7 +479,7 @@ public class KanbanController {
 
 
         try {
-            linkedListCatalogue.add(new KanbanTask("Golas","Diego Ochoa", "Diego Ochoa", "asd", 2, 3, "Prueba", LocalDate.now()));
+            linkedListCatalogue.enqueue(new KanbanTask("Golas","Diego Ochoa", "Diego Ochoa", "asd", 2, 3, "Prueba", LocalDate.now()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -535,7 +535,7 @@ public class KanbanController {
 
     private void updateMenuButtonRole(){
         menuButtonRole.getItems().clear();
-        for (Role role: linkedListRole){
+        for (Role role: linkedListRole.toList()){
             MenuItem menuItem = new MenuItem(role.getRolName());
             menuItem.setOnAction(actionEvent -> {
                 menuButtonRole.setText(role.getRolName());
