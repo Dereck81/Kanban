@@ -739,7 +739,7 @@ public class KanbanController {
 
     private void editRole(int index) throws Exception {
         String textRole = textFieldRole_edit.getText();
-        if(isValidString(textRole))
+        if(!isValidString(textRole))
             throw new IllegalArgumentException("The role name is empty.");
         //queueRole.setElement(index, new Role(textRole));
         queueRole.removeAt(index);

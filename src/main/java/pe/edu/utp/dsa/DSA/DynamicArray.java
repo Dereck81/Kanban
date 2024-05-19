@@ -105,6 +105,8 @@ public class DynamicArray<T> implements Iterable<T> {
 			copy.arr[i] = arr[i];
 		}
 
+		copy.size = size;
+
 		return copy;
 	}
 }

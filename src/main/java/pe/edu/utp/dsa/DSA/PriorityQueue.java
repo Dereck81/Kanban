@@ -1,5 +1,6 @@
 package pe.edu.utp.dsa.DSA;
 
+import java.io.InvalidObjectException;
 import java.util.*;
 
 public class PriorityQueue<T extends Comparable<T>> {
@@ -36,6 +37,12 @@ public class PriorityQueue<T extends Comparable<T>> {
         }
 
         private int indexedMin(int i, int j) {
+
+            if (heap.at(i) == null)
+                return i;
+            if (heap.at(j) == null)
+                return j;
+
             return heap.at(i).compareTo(heap.at(j)) >= 0 ? j : i;
         }
 
@@ -48,7 +55,13 @@ public class PriorityQueue<T extends Comparable<T>> {
                 return;
             int left = leftChild(node);
             int right = rightChild(node);
-            int res = indexedMax3(node, left, right);
+            int res = 0;
+
+            if (left < heap.size())
+                res = indexedMax(node, left);
+            if (right < heap.size())
+                res = indexedMax(res, right);
+
             if (res != node) {
                 heap.swap(res, node);
                 heapify(res);
@@ -84,7 +97,7 @@ public class PriorityQueue<T extends Comparable<T>> {
             while (i < n) {
                 max1 = maxChild(max1);
 
-                if (heap.at(max2).compareTo(heap.at(max1)) >= 0) {
+                if (max2 < heap.size() && heap.at(max2).compareTo(heap.at(max1)) >= 0) {
                     int tmp = max1;
                     max1 = max2;
                     max2 = tmp;
@@ -99,14 +112,9 @@ public class PriorityQueue<T extends Comparable<T>> {
         public void arbitraryRemoval(int n) {
             int target = traverse(n);
 
-            while (!isLeaf(target)) {
-                int maxChild = maxChild(target);
-                heap.swap(target, maxChild);
-                target = maxChild;
-            }
-
             heap.swap(target, heap.size() - 1);
             heap.pop();
+            heapify(0);
         }
 
         /**
@@ -140,6 +148,12 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     public void enqueue(T elem) {
         maxHeap.insert(elem);
+    }
+
+    public T dequeue() {
+        if (maxHeap.heap.size() <= 0)
+            throw new IndexOutOfBoundsException("Heap is already empty");
+        return maxHeap.popMax();
     }
 
     public T getElement(int idx) {
