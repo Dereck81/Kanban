@@ -43,9 +43,13 @@ public class User implements Comparable<User>{
             return this.rol.getRolName().compareTo(o.getRol().getRolName())*-1;
     }
 
-    public boolean equals(User obj){
-        if(name.equals(obj.getName()))
-            return rol.equals(obj.getRol());
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null || obj.getClass() != getClass())
+            return false;
+        if(name.equals(((User) obj).getName()))
+            return rol.equals(((User) obj).getRol());
         return false;
     }
 

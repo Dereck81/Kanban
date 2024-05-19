@@ -1,4 +1,4 @@
-module pe.edu.utp.dsa.kanban {
+module pe.edu.utp.dsa.Kanban {
     requires javafx.controls;
     requires javafx.fxml;
 

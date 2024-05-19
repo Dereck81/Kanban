@@ -17,11 +17,10 @@ import java.util.Objects;
 public class KanbanTask implements Comparable<KanbanTask>{
 
     private String name;
-    private int priority;
+    private byte priority;
     private int numberTask;
-    private String role;
     private String author;
-    private String userAssignedToTheTask;
+    private User userAssignedToTheTask;
     private LocalDate registrationDate;
     private String description;
     private LocalDate finishDate;
@@ -32,14 +31,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
             this::getPriority,
             this::getName,
             this::getuserAssignedToTheTask,
-            this::getRole,
             this::getRegistrationDate,
             this::getNumberTask,
             this::getFinishDate
     };
 
-    public KanbanTask(String name, String userAssignedToTheTask, String author, String role, int numberTask,
-                      int priority, String description, LocalDate finishDate) throws IllegalArgumentException{
+    public KanbanTask(String name, User userAssignedToTheTask, String author, int numberTask,
+                      byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
 
         if((priority < 0 || priority > 5) || (finishDate.isBefore(LocalDate.now())))
             throw new IllegalArgumentException("The data entered is invalid");
@@ -50,7 +48,21 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.finishDate = finishDate;
         this.registrationDate = LocalDate.now();
         this.priority = priority;
-        this.role = role;
+        this.description = description;
+        this.author = author;
+    }
+    public KanbanTask(String name, String author, int numberTask,
+                      byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
+
+        if((priority < 0 || priority > 5) || (finishDate.isBefore(LocalDate.now())))
+            throw new IllegalArgumentException("The data entered is invalid");
+
+        this.name = name;
+        this.userAssignedToTheTask = null;
+        this.numberTask = numberTask;
+        this.finishDate = finishDate;
+        this.registrationDate = LocalDate.now();
+        this.priority = priority;
         this.description = description;
         this.author = author;
     }
@@ -69,19 +81,26 @@ public class KanbanTask implements Comparable<KanbanTask>{
             return 0;
     }
 
-    public boolean equals(KanbanTask kbt){
+    @Override
+    public boolean equals(Object kbt){
+        if (this == kbt) return true;
+
+        if(kbt == null || kbt.getClass() != getClass())
+            return false;
         for (int i = 0; i < propertyGetters.length; i++) {
-            if(!propertyGetters[i].gets().equals(kbt.propertyGetters[i].gets()))
+            if(!propertyGetters[i].gets().equals(((KanbanTask) kbt).propertyGetters[i].gets()))
                 return false;
         }
         return true;
     }
 
-    public String getuserAssignedToTheTask() {
+    public User getuserAssignedToTheTask() {
+        if(userAssignedToTheTask == null)
+            return new User("Not assigned", null);
         return userAssignedToTheTask;
     }
 
-    public void setuserAssignedToTheTask(String userAssignedToTheTask) {
+    public void setuserAssignedToTheTask(User userAssignedToTheTask) {
         this.userAssignedToTheTask = userAssignedToTheTask;
     }
 
@@ -97,20 +116,12 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.name = name;
     }
 
-    public int getPriority() {
+    public byte getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(byte priority) {
         this.priority = priority;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getAuthor() {
@@ -142,13 +153,15 @@ public class KanbanTask implements Comparable<KanbanTask>{
         double widthPaneTask = 178.0;
 
         String priorityIconDirectory;
+        String userAssignment = (this.userAssignedToTheTask == null)
+                ? "Not assigned" : this.userAssignedToTheTask.getName();
 
         if(priority <= 2) priorityIconDirectory = "imgs/lowerpriority.png";
         else if (priority <= 4) priorityIconDirectory = "imgs/mediumpriority.png";
         else priorityIconDirectory = "imgs/highpriority.png";
 
         Separator separator = new Separator(Orientation.HORIZONTAL);
-        Label userAssignedToTheTask = new Label(truncateString(this.userAssignedToTheTask, 23));
+        Label userAssignedToTheTask = new Label(truncateString(userAssignment, 22));
         Label finishDate = new Label("Finish: " + this.finishDate.toString());
         Label numberTask = new Label("N° Task: #" + this.numberTask);
         Label priority = new Label("P: " + this.priority);

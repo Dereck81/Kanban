@@ -1,6 +1,6 @@
 package pe.edu.utp.dsa.Kanban.Utilities;
 
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import pe.edu.utp.dsa.Kanban.Kanban;
 
 import java.io.*;
@@ -15,25 +15,6 @@ public class Utilities {
                     .replaceAll("%20", " ").substring(1);
 
     private static final int _CANTRECENTFILES_ = 5;
-
-    /**
-     *  Displays an alert in the user interface.
-     * @param title      title of the alert
-     * @param header     header of the alert
-     * @param contextText body text of the alert
-     * @param alertType  type of the alert
-     */
-    public static void alert(String title, String header, String contextText, Alert.AlertType alertType){
-        Alert alert = new Alert(alertType);
-        /* alerta.getDialogPane().getStylesheets()
-        //        .add(Objects.requireNonNull(Kanban.class.getResource("styles.css"))
-                        .toExternalForm());
-         */
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(contextText);
-        alert.showAndWait();
-    }
 
     /**
      * Reads recent file records from the log file.
@@ -120,6 +101,11 @@ public class Utilities {
         else
             return str.substring(0, until)+"...";
     }
+
+    public static boolean isValidString(String str){
+        return (str != null) && ((!str.isEmpty() && !str.isBlank()));
+    }
+
 
     public static void exportAsPDF(){
 
