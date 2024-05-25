@@ -246,4 +246,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
         return paneTask;
     }
 
+    public void setFinishDate(LocalDate d) {
+        this.finishDate = d;
+    }
 }

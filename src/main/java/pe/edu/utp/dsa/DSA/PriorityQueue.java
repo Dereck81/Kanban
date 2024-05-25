@@ -1,11 +1,15 @@
 package pe.edu.utp.dsa.DSA;
 
-import java.io.InvalidObjectException;
 import java.util.*;
 
 public class PriorityQueue<T extends Comparable<T>> {
 
+    public interface ElementEditor<T> {
+        public void edit(T elem);
+    }
+
     private class MaxHeap<T extends Comparable<T>> {
+
         private DynamicArray<T> heap;
 
         public MaxHeap() {
@@ -50,7 +54,7 @@ public class PriorityQueue<T extends Comparable<T>> {
             return indexedMax(i, indexedMax(j, k));
         }
 
-        private void heapify(int node) {
+        private void downHeapify(int node) {
             if (isLeaf(node))
                 return;
             int left = leftChild(node);
@@ -64,23 +68,27 @@ public class PriorityQueue<T extends Comparable<T>> {
 
             if (res != node) {
                 heap.swap(res, node);
-                heapify(res);
+                downHeapify(res);
             }
         }
 
-        public void insert(T elem) {
-            heap.pushBack(elem);
-            int current = heap.size() - 1;
+        private void upHeapify(int i) {
+            int current = i;
             while (heap.at(current).compareTo(heap.at(parent(current))) > 0) {
                 heap.swap(current, parent(current));
                 current = parent(current);
             }
         }
 
+        public void insert(T elem) {
+            heap.pushBack(elem);
+            upHeapify(heap.size() - 1);
+        }
+
         public T popMax() {
             T popped = heap.front();
             heap.setAt(0,  heap.pop());
-            heapify(0);
+            downHeapify(0);
             return popped;
         }
 
@@ -109,12 +117,16 @@ public class PriorityQueue<T extends Comparable<T>> {
             return max1;
         }
 
+        public T at(int i) {
+            return heap.at(traverse(i));
+        }
+
         public void arbitraryRemoval(int n) {
             int target = traverse(n);
 
             heap.swap(target, heap.size() - 1);
             heap.pop();
-            heapify(0);
+            downHeapify(0);
         }
 
         /**
@@ -128,6 +140,13 @@ public class PriorityQueue<T extends Comparable<T>> {
                 list.add(popMax());
             heap = clone;
             return list;
+        }
+
+        public void editElement(ElementEditor<T> ee, int i) {
+            T elem = this.at(i);
+            ee.edit(elem);
+            downHeapify(i);
+            upHeapify(i);
         }
     }
 
@@ -166,5 +185,9 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     public ArrayList<T> toList() {
         return maxHeap.toList();
+    }
+
+    public void editElement(ElementEditor<T> ee, int i) {
+        maxHeap.editElement(ee, i);
     }
 }

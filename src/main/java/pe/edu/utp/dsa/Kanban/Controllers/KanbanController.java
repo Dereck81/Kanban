@@ -328,7 +328,7 @@ public class KanbanController {
                 queueSelected.removeAt(index);
                 queuePrevious.enqueue(ktb);
             }catch (Exception ignored){}
-            updateListViews();
+            refreshListViews();
         });
         MenuItem menuItemNext = new MenuItem("Next column");
         menuItemNext.setOnAction(actionEvent -> {
@@ -338,7 +338,7 @@ public class KanbanController {
                 queueSelected.removeAt(index);
                 queueNext.enqueue(ktb);
             }catch (Exception ignored){}
-            updateListViews();
+            refreshListViews();
         });
         MenuItem menuItemNext1 = new MenuItem("Next column");
         menuItemNext1.setOnAction(actionEvent -> {
@@ -348,7 +348,7 @@ public class KanbanController {
                 queueSelected.removeAt(index);
                 queueNext.enqueue(ktb);
             }catch (Exception ignored){}
-            updateListViews();
+            refreshListViews();
         });
 
         menuItemDelete_Role = new MenuItem("Delete Role");
@@ -693,29 +693,35 @@ public class KanbanController {
     }
 
     @FXML
-    private void editTask(int index) throws Exception{
+    private void editTask(int index) throws Exception {
         int numberTask = listViewSelected.getItems().get(index).getNumberTask();
         String taskName = editTaskNameTextField.getText();
         String finishedDate = editFinishedDateTextField.getText();
         String taskDescription = editTaskDescriptionTextArea.getText();
-        KanbanTask task = new KanbanTask(
-                taskName, selectUser, projectCreatorName.getText(),
-                numberTask, selectedPriority, taskDescription, LocalDate.parse(finishedDate)
-        );
-        try{
-            if(selectUser != null && queueSelected == queueCatalogue){
-                queueSelected.removeAt(index);
-                queueNext.enqueue(task);
-            }else{
-                // no existe setElement
-                queueSelected.removeAt(index);
-                queueSelected.enqueue(task);
-            }
 
-        }catch (Exception e){
-            throw new Exception(e);
+        // move a task to de "To Do" queue when an user is assigned to the task.
+        if(selectUser != null && queueSelected == queueCatalogue){
+            KanbanTask task = new KanbanTask(
+                    taskName, selectUser, projectCreatorName.getText(),
+                    numberTask, selectedPriority, taskDescription, LocalDate.parse(finishedDate)
+            );
+            queueSelected.removeAt(index);
+            queueNext.enqueue(task);
+        } else {
+            // no existe setElement
+            queueSelected.editElement(
+                    (KanbanTask kt) -> {
+                        kt.setName(taskName);
+                        kt.setuserAssignedToTheTask(selectUser);
+                        kt.setAuthor(projectCreatorName.getText());
+                        kt.setPriority(selectedPriority);
+                        kt.setDescription(taskDescription);
+                        kt.setFinishDate(LocalDate.parse(finishedDate));
+                    },
+                    index
+            );
         }
-        updateListViews();
+        refreshListViews();
         resetForm(ResetSection.EDIT_TASK);
         anchorPaneEditTask.setVisible(false);
         titledPaneTaskOthers.setExpanded(false);
@@ -728,9 +734,10 @@ public class KanbanController {
             throw new IllegalArgumentException("The username is empty.");
 
         //queueUser.setElement(indexUser, new User(textUser, selectedRole));
-        queueUser.removeAt(indexUser);
-        queueUser.enqueue(new User(textUser, selectedRole));
-        updateListView(listViewUsers, queueUser);
+        queueUser.editElement((User u) -> {
+            u.setName(textUser);
+            }, indexUser);
+        refreshEverything();
         resetForm(ResetSection.EDIT_USER);
         anchorPaneEditUser.setVisible(false);
         anchorPaneAddUser.setVisible(true);
@@ -742,10 +749,10 @@ public class KanbanController {
         if(!isValidString(textRole))
             throw new IllegalArgumentException("The role name is empty.");
         //queueRole.setElement(index, new Role(textRole));
-        queueRole.removeAt(index);
-        queueRole.enqueue(new Role(textRole));
-        updateListView(listViewRoles, queueRole);
-        updateMenuButtonRole();
+        queueRole.editElement((Role r) -> {
+            r.setRolName(textRole);
+            }, index);
+        refreshEverything();
         resetForm(ResetSection.EDIT_ROLE);
         anchorPaneEditRole.setVisible(false);
         anchorPaneAddRole.setVisible(true);
@@ -960,12 +967,20 @@ public class KanbanController {
         );
     }
 
-    private void updateListViews(){
-        listViewCatalogue.getItems().setAll(queueCatalogue.toList());
-        listViewToDo.getItems().setAll(queueToDo.toList());
-        listViewToBeChecked.getItems().setAll(queueToBeChecked.toList());
-        listViewInProgress.getItems().setAll(queueInProgress.toList());
-        listViewFinished.getItems().setAll(queueFinished.toList());
+    private void refreshEverything() {
+        refreshListViews();
+        listViewRoles.refresh();
+        listViewUsers.refresh();
+        updateMenuButtonUser();
+        updateMenuButtonRole();
+    }
+
+    private void refreshListViews(){
+        listViewCatalogue.refresh();
+        listViewToDo.refresh();
+        listViewToBeChecked.refresh();
+        listViewInProgress.refresh();
+        listViewFinished.refresh();
     }
 
     private void updateListView(){
@@ -1020,6 +1035,4 @@ public class KanbanController {
     private Stage getStage(){
         return ((Stage) titledPaneProjectCreator.getScene().getWindow());
     }
-
-
 }
