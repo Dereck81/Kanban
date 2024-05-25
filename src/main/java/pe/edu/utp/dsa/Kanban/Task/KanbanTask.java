@@ -192,7 +192,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
 
         iconDescription.setFitWidth(25);
         iconDescription.setFitHeight(25);
-        description.setPrefSize(150, 60);
+        description.setPrefSize(140, 60);
 
         iconUser.setFitWidth(20);
         iconUser.setFitHeight(20);

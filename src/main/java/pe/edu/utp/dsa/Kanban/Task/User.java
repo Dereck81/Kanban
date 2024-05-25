@@ -13,7 +13,6 @@ public class User implements Comparable<User>{
     private String name;
     private Role rol;
 
-
     public User(String name, Role rol){
         this.name = capitalize(name);
         this.rol = rol;

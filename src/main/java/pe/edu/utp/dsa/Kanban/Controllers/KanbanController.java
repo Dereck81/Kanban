@@ -118,6 +118,8 @@ public class KanbanController {
 
     // JavaFX ListViews
     private ListView<KanbanTask> listViewSelected = null;
+    private ListView<KanbanTask> listViewPrevious = null;
+    private ListView<KanbanTask> listViewNext = null;
 
 
     // Other elements outside of JavaFX
@@ -282,10 +284,20 @@ public class KanbanController {
             resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
             updateListView();
         });
+
         MenuItem menuItemDelete3 = new MenuItem("Delete Task");
         menuItemDelete3.setOnAction(actionEvent -> {
             int index = listViewSelected.getSelectionModel().getSelectedIndex();
             queueSelected.removeAt(index);
+            resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
+            updateListView();
+        });
+
+        MenuItem menuItemDeleteAll = new MenuItem("Delete All");
+        menuItemDeleteAll.setOnAction(actionEvent -> {
+            // Delete this for when the queue is already .clear
+            for(int i = 0; i < queueSelected.size(); i++)
+                queueSelected.removeAt(i);
             resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
             updateListView();
         });
@@ -322,32 +334,26 @@ public class KanbanController {
 
         MenuItem menuItemBack = new MenuItem("Back column");
         menuItemBack.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
             try{
-                KanbanTask ktb = queueSelected.getElement(index);
-                queueSelected.removeAt(index);
-                queuePrevious.enqueue(ktb);
+                queuePrevious.enqueue(queueSelected.dequeue());
             }catch (Exception ignored){}
+            updateListView();
             refreshListViews();
         });
         MenuItem menuItemNext = new MenuItem("Next column");
         menuItemNext.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
             try {
-                KanbanTask ktb = queueSelected.getElement(index);
-                queueSelected.removeAt(index);
-                queueNext.enqueue(ktb);
+                queueNext.enqueue(queueSelected.dequeue());
             }catch (Exception ignored){}
+            updateListView();
             refreshListViews();
         });
         MenuItem menuItemNext1 = new MenuItem("Next column");
         menuItemNext1.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
             try {
-                KanbanTask ktb = queueSelected.getElement(index);
-                queueSelected.removeAt(index);
-                queueNext.enqueue(ktb);
+                queueNext.enqueue(queueSelected.dequeue());
             }catch (Exception ignored){}
+            updateListView();
             refreshListViews();
         });
 
@@ -388,7 +394,7 @@ public class KanbanController {
         contextMenuToDo.getItems().setAll(menuItemDelete3, menuItemEdit2, menuItemNext1);
         contextMenuCatalogue.getItems().setAll(menuItemDelete0, menuItemEdit0);
         contextMenuOthersColumns.getItems().setAll(menuItemDelete2, menuItemEdit1, menuItemBack, menuItemNext);
-        contextMenuFinished.getItems().setAll(menuItemDelete1);
+        contextMenuFinished.getItems().setAll(menuItemDelete1, menuItemDeleteAll);
 
     }
 
@@ -435,16 +441,14 @@ public class KanbanController {
         addlistener to be re-executed, causing an error at run time.
          */
 
-        listViewCatalogue.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener((observable, oldvalue, newvalue) -> {
+        listViewCatalogue.getSelectionModel().selectedIndexProperty().addListener(
+                observable -> {
                     if(!isDeselectionByUser) return;
-                    deselectListCell(
-                            listViewToDo,
-                            listViewInProgress,
-                            listViewToBeChecked,
-                            listViewFinished);
+                    deselectListCell(listViewToDo, listViewInProgress,
+                            listViewToBeChecked, listViewFinished);
                     listViewSelected = listViewCatalogue;
+                    listViewPrevious = null;
+                    listViewNext = listViewToDo;
                     queueSelected = queueCatalogue;
                     queuePrevious = null;
                     queueNext = queueToDo;
@@ -453,78 +457,63 @@ public class KanbanController {
                 });
         //listViewToDo
 
-        listViewToDo.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener((observable -> {
+        listViewToDo.getSelectionModel().selectedIndexProperty().addListener(
+                observable -> {
                     if(!isDeselectionByUser) return;
-                    deselectListCell(
-                            listViewCatalogue,
-                            listViewToBeChecked,
-                            listViewInProgress,
-                            listViewFinished
-                    );
+                    deselectListCell(listViewCatalogue, listViewToBeChecked,
+                            listViewInProgress, listViewFinished);
                     listViewSelected = listViewToDo;
+                    listViewPrevious = null;
+                    listViewNext = listViewInProgress;
                     queueSelected = queueToDo;
-
                     queuePrevious = null;
                     queueNext = queueInProgress;
                     taskInfo();
-                }));
+                });
         //listViewInProgress
 
-        listViewInProgress.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener(observable -> {
+        listViewInProgress.getSelectionModel().selectedIndexProperty().addListener(
+                observable -> {
                     if(!isDeselectionByUser) return;
-                    deselectListCell(
-                            listViewCatalogue,
-                            listViewToBeChecked,
-                            listViewToDo,
-                            listViewFinished
-                    );
+                    deselectListCell(listViewCatalogue, listViewToBeChecked,
+                            listViewToDo, listViewFinished);
                     listViewSelected = listViewInProgress;
+                    listViewPrevious = listViewToDo;
+                    listViewNext = listViewToBeChecked;
                     queueSelected = queueInProgress;
-
                     queuePrevious = queueToDo;
                     queueNext = queueToBeChecked;
                     taskInfo();
                 });
         //listViewToBeChecked
-        listViewToBeChecked.getSelectionModel()
-                .selectedIndexProperty()
-                .addListener(observable -> {
+        listViewToBeChecked.getSelectionModel().selectedIndexProperty().addListener(
+                observable -> {
                     if(!isDeselectionByUser) return;
-                    deselectListCell(
-                            listViewToDo,
-                            listViewCatalogue,
-                            listViewFinished,
-                            listViewInProgress
-                    );
+                    deselectListCell(listViewToDo, listViewCatalogue,
+                            listViewFinished, listViewInProgress);
                     listViewSelected = listViewToBeChecked;
+                    listViewPrevious = listViewInProgress;
+                    listViewNext = listViewFinished;
                     queueSelected = queueToBeChecked;
-
                     queuePrevious = queueInProgress;
                     queueNext = queueFinished;
                     taskInfo();
 
                 });
         //listViewFinished
-        listViewFinished.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observable -> {
+        listViewFinished.getSelectionModel().selectedItemProperty().addListener(
+                observable -> {
                     if(!isDeselectionByUser) return;
-                    deselectListCell(
-                            listViewCatalogue,
-                            listViewToDo,
-                            listViewInProgress,
-                            listViewToBeChecked
-                    );
+                    deselectListCell(listViewCatalogue, listViewToDo,
+                            listViewInProgress, listViewToBeChecked);
                     listViewSelected = listViewFinished;
+                    listViewPrevious = null;
+                    listViewNext = null;
                     queueSelected = queueFinished;
                     queuePrevious = null;
                     queueNext = null;
                     taskInfo();
-                }));
+                });
         //Role
     }
 
@@ -533,12 +522,11 @@ public class KanbanController {
     private void taskInfo(){
         resetForm(ResetSection.TASK_INFO);
         int index = listViewSelected.getSelectionModel().getSelectedIndex();
-        KanbanTask task;
-        try {
-            task = queueSelected.getElement(index);
-        } catch (Exception e) {
-            return;
-        }
+        System.out.println(index);
+        KanbanTask task = queueSelected.getElement(index);
+
+        if (task == null) return;
+
         anchorPaneAddTask.setVisible(false);
         anchorPaneEditTask.setVisible(false);
         titledPaneTaskOthers.setExpanded(true);
@@ -569,7 +557,7 @@ public class KanbanController {
         });
     }
 
-    private void executeAnchorPanedEditTask() throws Exception {
+    private void executeAnchorPanedEditTask(){
         anchorPaneAddTask.setVisible(false);
         anchorPaneTaskInfo.setVisible(false);
         titledPaneTaskOthers.setExpanded(true);
@@ -592,7 +580,7 @@ public class KanbanController {
         });
     }
 
-    private void executeAnchorPaneEditRole() throws Exception {
+    private void executeAnchorPaneEditRole(){
         anchorPaneAddRole.setVisible(false);
         titledPaneRoles.setExpanded(true);
         anchorPaneEditRole.setVisible(true);
@@ -607,7 +595,7 @@ public class KanbanController {
         });
     }
 
-    private void executeAnchorPaneEditUser() throws Exception {
+    private void executeAnchorPaneEditUser(){
         anchorPaneAddUser.setVisible(false);
         titledPaneUsers.setExpanded(true);
         anchorPaneEditUser.setVisible(true);
@@ -659,8 +647,8 @@ public class KanbanController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        listViewCatalogue.getItems().setAll(queueCatalogue.toList());
-        listViewToDo.getItems().setAll(queueToDo.toList());
+        updateListView(listViewCatalogue, queueCatalogue);
+        updateListView(listViewToDo, queueToDo);
         anchorPaneAddTask.setVisible(false);
         titledPaneTaskOthers.setExpanded(false);
         resetForm(ResetSection.ADD_TASK);
@@ -693,7 +681,7 @@ public class KanbanController {
     }
 
     @FXML
-    private void editTask(int index) throws Exception {
+    private void editTask(int index){
         int numberTask = listViewSelected.getItems().get(index).getNumberTask();
         String taskName = editTaskNameTextField.getText();
         String finishedDate = editFinishedDateTextField.getText();
@@ -708,7 +696,6 @@ public class KanbanController {
             queueSelected.removeAt(index);
             queueNext.enqueue(task);
         } else {
-            // no existe setElement
             queueSelected.editElement(
                     (KanbanTask kt) -> {
                         kt.setName(taskName);
@@ -721,22 +708,23 @@ public class KanbanController {
                     index
             );
         }
-        refreshListViews();
+        updateListView();
+        //refreshListViews();
+        // This line was omitted since when editing a task
+        // and changing the priority to a lower one that was before,
+        // it has no effect on the ordering of the elements.
         resetForm(ResetSection.EDIT_TASK);
         anchorPaneEditTask.setVisible(false);
         titledPaneTaskOthers.setExpanded(false);
     }
 
-    private void editUser(int indexUser) throws Exception {
+    private void editUser(int indexUser){
         String textUser = textFieldUsername_edit.getText();
 
         if(!isValidString(textUser))
             throw new IllegalArgumentException("The username is empty.");
 
-        //queueUser.setElement(indexUser, new User(textUser, selectedRole));
-        queueUser.editElement((User u) -> {
-            u.setName(textUser);
-            }, indexUser);
+        queueUser.editElement((User u) -> u.setName(textUser), indexUser);
         refreshEverything();
         resetForm(ResetSection.EDIT_USER);
         anchorPaneEditUser.setVisible(false);
@@ -744,14 +732,12 @@ public class KanbanController {
         menuItemDelete_User.setDisable(false);
     }
 
-    private void editRole(int index) throws Exception {
+    private void editRole(int index){
         String textRole = textFieldRole_edit.getText();
         if(!isValidString(textRole))
             throw new IllegalArgumentException("The role name is empty.");
-        //queueRole.setElement(index, new Role(textRole));
-        queueRole.editElement((Role r) -> {
-            r.setRolName(textRole);
-            }, index);
+
+        queueRole.editElement((Role r) -> r.setRolName(textRole), index);
         refreshEverything();
         resetForm(ResetSection.EDIT_ROLE);
         anchorPaneEditRole.setVisible(false);
@@ -985,6 +971,10 @@ public class KanbanController {
 
     private void updateListView(){
         listViewSelected.getItems().setAll(queueSelected.toList());
+        if (listViewNext != null)
+            listViewNext.getItems().setAll(queueNext.toList());
+        if (listViewPrevious != null)
+            listViewPrevious.getItems().setAll(queuePrevious.toList());
     }
 
     private void updateMenuButtonRole(){

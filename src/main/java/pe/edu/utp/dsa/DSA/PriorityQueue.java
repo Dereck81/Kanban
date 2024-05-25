@@ -4,8 +4,9 @@ import java.util.*;
 
 public class PriorityQueue<T extends Comparable<T>> {
 
+    @FunctionalInterface
     public interface ElementEditor<T> {
-        public void edit(T elem);
+        void edit(T elem);
     }
 
     private class MaxHeap<T extends Comparable<T>> {
