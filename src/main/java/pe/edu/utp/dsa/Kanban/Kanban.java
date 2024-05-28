@@ -31,7 +31,7 @@ public class Kanban extends Application {
         stage.setTitle("Kanban Application");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setOnCloseRequest(windowEvent -> Platform.exit());
+        stage.setOnCloseRequest(windowEvent -> controller.quit());
         stage.show();
     }
     public static void main(String[] args) {

@@ -660,8 +660,10 @@ public class KanbanController {
         if(!isValidString(textUser))
             throw new IllegalArgumentException("Username is blank");
 
+        if(selectedRole == null)
+            throw new IllegalArgumentException("Role is not selected!");
+
         queueUser.enqueue(new User(textUser, selectedRole));
-        listViewUsers.getItems().setAll(queueUser.toList());
         updateListView(listViewUsers, queueUser);
         updateMenuButtonUser();
         resetForm(ResetSection.ADD_USER);
@@ -923,7 +925,7 @@ public class KanbanController {
     }
 
     @FXML
-    private void quit(){
+    public void quit(){
         ConfirmationOptions confirmationOption = GlobalExceptionHandler.alertConfirmation(
                 "Save File",
                 "Are you sure to continue?",
@@ -1018,8 +1020,8 @@ public class KanbanController {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void updateListView(ListView listView, PriorityQueue linkedList){
-        listView.getItems().setAll(linkedList.toList());
+    private void updateListView(ListView listView, PriorityQueue priorityQueue){
+        listView.getItems().setAll(priorityQueue.toList());
     }
 
     private Stage getStage(){
