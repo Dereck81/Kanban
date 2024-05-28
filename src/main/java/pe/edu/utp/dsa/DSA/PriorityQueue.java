@@ -149,6 +149,10 @@ public class PriorityQueue<T extends Comparable<T>> {
             downHeapify(i);
             upHeapify(i);
         }
+
+        public void clear() {
+            heap.clear();
+        }
     }
 
     private final MaxHeap<T> maxHeap;
@@ -186,6 +190,10 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     public ArrayList<T> toList() {
         return maxHeap.toList();
+    }
+
+    public void clear() {
+        maxHeap.clear();
     }
 
     public void editElement(ElementEditor<T> ee, int i) {

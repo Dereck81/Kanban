@@ -43,6 +43,7 @@ public class DynamicArray<T> implements Iterable<T> {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void grow() {
 		assert (size >= capacity);
 
@@ -89,8 +90,15 @@ public class DynamicArray<T> implements Iterable<T> {
 		return arr[0];
 	}
 
+	@SuppressWarnings("unused")
 	public T back() {
 		return arr[size - 1];
+	}
+
+	public void clear() {
+		arr = null;
+		size = 0;
+		capacity = 0;
 	}
 
 	/**
@@ -101,9 +109,7 @@ public class DynamicArray<T> implements Iterable<T> {
 	 */
 	public DynamicArray<T> clone() {
 		DynamicArray<T> copy = new DynamicArray<>(capacity);
-		for (int i = 0; i < size; i++) {
-			copy.arr[i] = arr[i];
-		}
+		if (size >= 0) System.arraycopy(arr, 0, copy.arr, 0, size);
 
 		copy.size = size;
 
