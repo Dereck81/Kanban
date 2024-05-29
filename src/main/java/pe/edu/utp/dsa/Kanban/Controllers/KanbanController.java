@@ -295,9 +295,8 @@ public class KanbanController {
 
         MenuItem menuItemDeleteAll = new MenuItem("Delete All");
         menuItemDeleteAll.setOnAction(actionEvent -> {
-            // Delete this for when the queue is already .clear
-            for(int i = 0; i < queueSelected.size(); i++)
-                queueSelected.removeAt(i);
+            if(!queueSelected.isEmpty())
+                queueSelected.clear();
             resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
             updateListView();
         });
@@ -972,7 +971,8 @@ public class KanbanController {
     }
 
     private void updateListView(){
-        listViewSelected.getItems().setAll(queueSelected.toList());
+        if(queueSelected.isEmpty()) listViewSelected.getItems().clear();
+        else listViewSelected.getItems().setAll(queueSelected.toList());
         if (listViewNext != null)
             listViewNext.getItems().setAll(queueNext.toList());
         if (listViewPrevious != null)

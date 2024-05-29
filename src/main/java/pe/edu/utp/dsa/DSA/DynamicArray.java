@@ -95,10 +95,11 @@ public class DynamicArray<T> implements Iterable<T> {
 		return arr[size - 1];
 	}
 
+	@SuppressWarnings("unchecked")
 	public void clear() {
-		arr = null;
-		size = 0;
 		capacity = 0;
+		size = 0;
+		arr = (T[]) new Object[capacity];
 	}
 
 	/**
