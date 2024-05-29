@@ -521,11 +521,9 @@ public class KanbanController {
     private void taskInfo(){
         resetForm(ResetSection.TASK_INFO);
         int index = listViewSelected.getSelectionModel().getSelectedIndex();
-        System.out.println(index);
+        if (index == -1) return;
         KanbanTask task = queueSelected.getElement(index);
-
         if (task == null) return;
-
         anchorPaneAddTask.setVisible(false);
         anchorPaneEditTask.setVisible(false);
         titledPaneTaskOthers.setExpanded(true);
