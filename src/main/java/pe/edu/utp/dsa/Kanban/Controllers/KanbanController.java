@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.*;
 
@@ -270,7 +269,7 @@ public class KanbanController {
         EventHandler<ActionEvent> deleteFn = (ae) -> {
             KanbanTask kt = listViewSelected.getSelectionModel().getSelectedItem();
             int queueIndex = queueSelected.find(kt);
-            queueSelected.deleteWithRealPos(queueIndex);
+            queueSelected.deleteAt(queueIndex);
             resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
             updateListView();
         };
@@ -354,7 +353,7 @@ public class KanbanController {
         menuItemDelete_Role.setOnAction(actionEvent -> {
             Role r = listViewRoles.getSelectionModel().getSelectedItem();
             int queueIndex = queueRole.find(r);
-            queueRole.deleteWithRealPos(queueIndex);
+            queueRole.deleteAt(queueIndex);
             updateListView(listViewRoles, queueRole);
         });
 
@@ -380,7 +379,7 @@ public class KanbanController {
         menuItemDelete_User = new MenuItem("Delete User");
         menuItemDelete_User.setOnAction(actionEvent -> {
             User u = listViewUsers.getSelectionModel().getSelectedItem();
-            queueUser.deleteWithRealPos(queueUser.find(u));
+            queueUser.deleteAt(queueUser.find(u));
             updateListView(listViewUsers, queueUser);
         });
         contextMenuRoles.getItems().setAll(menuItemEdit_Role, menuItemDelete_Role);
@@ -690,7 +689,7 @@ public class KanbanController {
                     taskName, selectUser, projectCreatorName.getText(),
                     numberTask, selectedPriority, taskDescription, LocalDate.parse(finishedDate)
             );
-            queueSelected.deleteWithRealPos(numberTask);
+            queueSelected.deleteAt(numberTask);
             queueNext.enqueue(task);
         } else {
             queueSelected.editElement(
@@ -722,7 +721,11 @@ public class KanbanController {
         if(!isValidString(textUser))
             throw new IllegalArgumentException("The username is empty.");
 
-		queueUser.editElement((User u) -> {u.setName(textUser);}, queueIndex);
+		queueUser.editElement(
+                (User u) -> {
+                    u.setName(textUser);
+                    u.setRol(selectedRole);
+                    }, queueIndex);
 
         refreshEverything();
         resetForm(ResetSection.EDIT_USER);
@@ -915,7 +918,8 @@ public class KanbanController {
 
     @FXML
     private void saveFile(){
-
+        String outputPath = "KanbanBoard-" + projectCreatorName + ".xml";
+        StringBuilder sb = new StringBuilder();
     }
 
     @FXML
@@ -935,8 +939,6 @@ public class KanbanController {
         else if (confirmationOption == ConfirmationOptions.CANCEL)
             return;
         else saveFile();
-
-
         Platform.exit();
     }
 

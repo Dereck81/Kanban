@@ -147,10 +147,24 @@ public class PriorityQueue<T extends Comparable<T>> {
         maxHeap.clear();
     }
 
-    public void deleteWithRealPos(int realPos) {
+    /**
+     * Deletes a element on the heap at a given position.
+     * @param realPos index to an element on the heap.
+     * @warning Since a heap maintains an specific order for its elements,
+     * the given index may not point to the actual element the caller is referring to.
+     * For a specific index lookup
+     */
+    public void deleteAt(int realPos) {
         maxHeap.deleteAt(realPos);
     }
 
+    /**
+     * Edits an element in the PQ at a given index
+     * @param ee Uses a lambda to wrap the edition process, so the caller can modify the
+     *           priority of the element and then this method will call the necessary
+     *           methods to maintain the heap policy.
+     * @param i
+     */
     public void editElement(ElementEditor<T> ee, int i) {
         maxHeap.editElement(ee, i);
     }
