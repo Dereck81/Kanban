@@ -51,7 +51,7 @@ public class Role implements Comparable<Role> {
      * @param rol the new name of the role
      */
     public void setRolName(String rol){
-        this.rol = rol;
+        this.rol = capitalize(rol);
     }
 
     /**

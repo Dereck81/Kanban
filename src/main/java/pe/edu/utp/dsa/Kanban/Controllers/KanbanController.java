@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
-import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.isValidString;
+import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.*;
 
 public class KanbanController {
 
