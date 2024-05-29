@@ -12,6 +12,7 @@ import pe.edu.utp.dsa.Kanban.Kanban;
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class KanbanTask implements Comparable<KanbanTask>{
@@ -24,6 +25,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
     private LocalDate registrationDate;
     private String description;
     private LocalDate finishDate;
+
+    private LocalDateTime creationTime;
 
     KanbanTaskPropertyGetter<?>[] propertyGetters = new KanbanTaskPropertyGetter[]{
             this::getAuthor,
@@ -50,6 +53,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.priority = priority;
         this.description = description;
         this.author = author;
+        this.creationTime = LocalDateTime.now();
     }
     public KanbanTask(String name, String author, int numberTask,
                       byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
@@ -69,16 +73,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
 
     @Override
     public int compareTo(KanbanTask o) {
-        int oP = o.getPriority();
-        LocalDate oD = o.getFinishDate();
-        if(this.priority > oP || this.priority < oP) return priority - oP;
-        else
-        if(this.finishDate.isBefore(oD))
-            return -1;
-        else if(this.finishDate.isAfter(oD))
-            return 1;
-        else
-            return 0;
+        if (priority != o.priority)
+            return priority - o.priority;
+
+        if (!finishDate.isEqual(o.finishDate))
+            return -1 * finishDate.compareTo(o.finishDate);
+
+        return -1 * creationTime.compareTo(o.creationTime);
     }
 
     @Override

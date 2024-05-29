@@ -1,6 +1,8 @@
 package pe.edu.utp.dsa.Kanban.Controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.isValidString;
@@ -261,37 +264,26 @@ public class KanbanController {
     }
 
     private void setupContextMenus(){
-        MenuItem menuItemDelete0 = new MenuItem("Delete Task");
-        menuItemDelete0.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            queueSelected.removeAt(index);
+
+        EventHandler<ActionEvent> deleteFn = (ae) -> {
+            KanbanTask kt = listViewSelected.getSelectionModel().getSelectedItem();
+            int queueIndex = queueSelected.find(kt);
+            queueSelected.deleteWithRealPos(queueIndex);
             resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
             updateListView();
-        });
+        };
+
+        MenuItem menuItemDelete0 = new MenuItem("Delete Task");
+        menuItemDelete0.setOnAction(deleteFn);
 
         MenuItem menuItemDelete1 = new MenuItem("Delete Task");
-        menuItemDelete1.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            queueSelected.removeAt(index);
-            resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
-            updateListView();
-        });
+        menuItemDelete1.setOnAction(deleteFn);
 
         MenuItem menuItemDelete2 = new MenuItem("Delete Task");
-        menuItemDelete2.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            queueSelected.removeAt(index);
-            resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
-            updateListView();
-        });
+        menuItemDelete2.setOnAction(deleteFn);
 
         MenuItem menuItemDelete3 = new MenuItem("Delete Task");
-        menuItemDelete3.setOnAction(actionEvent -> {
-            int index = listViewSelected.getSelectionModel().getSelectedIndex();
-            queueSelected.removeAt(index);
-            resetForm(ResetSection.ADD_TASK, ResetSection.EDIT_USER, ResetSection.TASK_INFO);
-            updateListView();
-        });
+        menuItemDelete3.setOnAction(deleteFn);
 
         MenuItem menuItemDeleteAll = new MenuItem("Delete All");
         menuItemDeleteAll.setOnAction(actionEvent -> {
@@ -358,8 +350,9 @@ public class KanbanController {
 
         menuItemDelete_Role = new MenuItem("Delete Role");
         menuItemDelete_Role.setOnAction(actionEvent -> {
-            int index = listViewRoles.getSelectionModel().getSelectedIndex();
-            queueRole.removeAt(index);
+            Role r = listViewRoles.getSelectionModel().getSelectedItem();
+            int queueIndex = queueRole.find(r);
+            queueRole.deleteWithRealPos(queueIndex);
             updateListView(listViewRoles, queueRole);
         });
 
@@ -384,8 +377,8 @@ public class KanbanController {
         });
         menuItemDelete_User = new MenuItem("Delete User");
         menuItemDelete_User.setOnAction(actionEvent -> {
-            int index = listViewUsers.getSelectionModel().getSelectedIndex();
-            queueUser.removeAt(index);
+            User u = listViewUsers.getSelectionModel().getSelectedItem();
+            queueUser.deleteWithRealPos(queueUser.find(u));
             updateListView(listViewUsers, queueUser);
         });
         contextMenuRoles.getItems().setAll(menuItemEdit_Role, menuItemDelete_Role);
@@ -522,7 +515,8 @@ public class KanbanController {
         resetForm(ResetSection.TASK_INFO);
         int index = listViewSelected.getSelectionModel().getSelectedIndex();
         if (index == -1) return;
-        KanbanTask task = queueSelected.getElement(index);
+        //KanbanTask task = queueSelected.getElement(index);
+	    KanbanTask task = listViewSelected.getItems().get(index);
         if (task == null) return;
         anchorPaneAddTask.setVisible(false);
         anchorPaneEditTask.setVisible(false);
@@ -560,7 +554,7 @@ public class KanbanController {
         titledPaneTaskOthers.setExpanded(true);
         anchorPaneEditTask.setVisible(true);
         int index = listViewSelected.getSelectionModel().getSelectedIndex();
-        KanbanTask task = queueSelected.getElement(index);
+		KanbanTask task = listViewSelected.getItems().get(index);
         editTaskNameTextField.setText(task.getName());
         editFinishedDateTextField.setText(task.getFinishDate().toString());
         editTaskDescriptionTextArea.setText(task.getDescription());
@@ -582,7 +576,8 @@ public class KanbanController {
         titledPaneRoles.setExpanded(true);
         anchorPaneEditRole.setVisible(true);
         int index = listViewRoles.getSelectionModel().getSelectedIndex();
-        textFieldRole_edit.setText(queueRole.getElement(index).getRolName());
+		Role role = listViewRoles.getItems().get(index);
+        textFieldRole_edit.setText(role.getRolName());
         buttonEditRole.setOnAction(actionEvent -> {
             try {
                 editRole(index);
@@ -681,7 +676,8 @@ public class KanbanController {
 
     @FXML
     private void editTask(int index){
-        int numberTask = listViewSelected.getItems().get(index).getNumberTask();
+		KanbanTask selectedTask = listViewSelected.getItems().get(index);
+		int numberTask = queueSelected.find(selectedTask);
         String taskName = editTaskNameTextField.getText();
         String finishedDate = editFinishedDateTextField.getText();
         String taskDescription = editTaskDescriptionTextArea.getText();
@@ -692,7 +688,7 @@ public class KanbanController {
                     taskName, selectUser, projectCreatorName.getText(),
                     numberTask, selectedPriority, taskDescription, LocalDate.parse(finishedDate)
             );
-            queueSelected.removeAt(index);
+            queueSelected.deleteWithRealPos(numberTask);
             queueNext.enqueue(task);
         } else {
             queueSelected.editElement(
@@ -704,7 +700,7 @@ public class KanbanController {
                         kt.setDescription(taskDescription);
                         kt.setFinishDate(LocalDate.parse(finishedDate));
                     },
-                    index
+                    numberTask
             );
         }
         updateListView();
@@ -717,13 +713,15 @@ public class KanbanController {
         titledPaneTaskOthers.setExpanded(false);
     }
 
-    private void editUser(int indexUser){
+    private void editUser(int index){
         String textUser = textFieldUsername_edit.getText();
+		int queueIndex = queueUser.find(listViewUsers.getItems().get(index));
 
         if(!isValidString(textUser))
             throw new IllegalArgumentException("The username is empty.");
 
-        queueUser.editElement((User u) -> u.setName(textUser), indexUser);
+		queueUser.editElement((User u) -> {u.setName(textUser);}, queueIndex);
+
         refreshEverything();
         resetForm(ResetSection.EDIT_USER);
         anchorPaneEditUser.setVisible(false);
@@ -733,19 +731,21 @@ public class KanbanController {
 
     private void editRole(int index){
         String textRole = textFieldRole_edit.getText();
+		int queueIndex = queueRole.find(listViewRoles.getItems().get(index));
         if(!isValidString(textRole))
             throw new IllegalArgumentException("The role name is empty.");
 
-        queueRole.editElement((Role r) -> r.setRolName(textRole), index);
+		queueRole.editElement(
+				(Role r) -> {r.setRolName(textRole);},
+				queueIndex
+		);
+
         refreshEverything();
         resetForm(ResetSection.EDIT_ROLE);
         anchorPaneEditRole.setVisible(false);
         anchorPaneAddRole.setVisible(true);
         menuItemDelete_Role.setDisable(false);
-
-
     }
-
 
     // Open File
 

@@ -37,24 +37,6 @@ public class PriorityQueue<T extends Comparable<T>> {
             return heap.at(i).compareTo(heap.at(j)) >= 0 ? i : j;
         }
 
-        private int maxChild(int n) {
-            return indexedMax(leftChild(n), rightChild(n));
-        }
-
-        private int indexedMin(int i, int j) {
-
-            if (heap.at(i) == null)
-                return i;
-            if (heap.at(j) == null)
-                return j;
-
-            return heap.at(i).compareTo(heap.at(j)) >= 0 ? j : i;
-        }
-
-        private int indexedMax3(int i, int j, int k) {
-            return indexedMax(i, indexedMax(j, k));
-        }
-
         private void downHeapify(int node) {
             if (isLeaf(node))
                 return;
@@ -94,43 +76,6 @@ public class PriorityQueue<T extends Comparable<T>> {
         }
 
         /**
-         * Finds the element with the N priority (the element that would be retrieved after N+1 calls to popMax)
-         * @param n priority
-         * @return Index to the element with the first N priority
-         */
-        public int traverse(int n) {
-            int i = 0;
-            int max1 = 0;
-            int max2 = indexedMin(leftChild(i), rightChild(0));
-
-            while (i < n) {
-                max1 = maxChild(max1);
-
-                if (max2 < heap.size() && heap.at(max2).compareTo(heap.at(max1)) >= 0) {
-                    int tmp = max1;
-                    max1 = max2;
-                    max2 = tmp;
-                }
-
-                i++;
-            }
-
-            return max1;
-        }
-
-        public T at(int i) {
-            return heap.at(traverse(i));
-        }
-
-        public void arbitraryRemoval(int n) {
-            int target = traverse(n);
-
-            heap.swap(target, heap.size() - 1);
-            heap.pop();
-            downHeapify(0);
-        }
-
-        /**
          * Creates an ArrayList with the elements of the heap without altering the heap
          * @return An ArrayList with all the elements sorted as if remove() was called sequentially
          */
@@ -144,7 +89,7 @@ public class PriorityQueue<T extends Comparable<T>> {
         }
 
         public void editElement(ElementEditor<T> ee, int i) {
-            T elem = this.at(i);
+            T elem = heap.at(i);
             ee.edit(elem);
             downHeapify(i);
             upHeapify(i);
@@ -152,6 +97,16 @@ public class PriorityQueue<T extends Comparable<T>> {
 
         public void clear() {
             heap.clear();
+        }
+
+        public int find(T x) {
+            return heap.find(x);
+        }
+
+        public void deleteAt(int pos) {
+            heap.swap(pos, heap.size() - 1);
+            heap.pop();
+            downHeapify(pos);
         }
     }
 
@@ -180,12 +135,8 @@ public class PriorityQueue<T extends Comparable<T>> {
         return maxHeap.popMax();
     }
 
-    public T getElement(int idx) {
-        return maxHeap.heap.at((maxHeap.traverse(idx)));
-    }
-
-    public void removeAt(int i) {
-        maxHeap.arbitraryRemoval(i);
+    public T getElement(int i) {
+        return maxHeap.heap.at(i);
     }
 
     public ArrayList<T> toList() {
@@ -196,7 +147,15 @@ public class PriorityQueue<T extends Comparable<T>> {
         maxHeap.clear();
     }
 
+    public void deleteWithRealPos(int realPos) {
+        maxHeap.deleteAt(realPos);
+    }
+
     public void editElement(ElementEditor<T> ee, int i) {
         maxHeap.editElement(ee, i);
+    }
+
+    public int find(T x) {
+        return maxHeap.find(x);
     }
 }
