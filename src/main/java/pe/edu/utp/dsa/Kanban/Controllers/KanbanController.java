@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pe.edu.utp.dsa.Kanban.ListView.ListCell;
@@ -13,13 +14,11 @@ import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
 import pe.edu.utp.dsa.DSA.PriorityQueue;
 import pe.edu.utp.dsa.Kanban.Task.Role;
 import pe.edu.utp.dsa.Kanban.Task.User;
-import pe.edu.utp.dsa.Kanban.Utilities.ConfirmationOptions;
-import pe.edu.utp.dsa.Kanban.Utilities.GlobalExceptionHandler;
-import pe.edu.utp.dsa.Kanban.Utilities.ResetSection;
-import pe.edu.utp.dsa.Kanban.Utilities.Utilities;
+import pe.edu.utp.dsa.Kanban.Utilities.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
@@ -101,6 +100,10 @@ public class KanbanController {
     private Label labelCreationDate, labelFinishDate;
     @FXML
     private Label labelAssignedUser;
+
+    //FXML HBox
+    @FXML
+    private HBox HBoxColumns;
 
 
     // JavaFX element's without @FXML tag
@@ -939,10 +942,11 @@ public class KanbanController {
 
 
     @FXML
-    private void exportAsPDF(){
+    private void exportAsPDF() throws IOException {
+        deselectAllListCell();
         file = fileChooserExportAsPDF.showSaveDialog(null);
         if(file == null) return;
-        Utilities.exportAsPDF();
+        Utilities.exportAsPDF(HBoxColumns, file.getPath());
 
         GlobalExceptionHandler.alertInformation(
                 "Export",

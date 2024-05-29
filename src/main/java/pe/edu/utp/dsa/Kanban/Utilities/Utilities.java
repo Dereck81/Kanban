@@ -1,8 +1,21 @@
 package pe.edu.utp.dsa.Kanban.Utilities;
 
+import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import pe.edu.utp.dsa.Kanban.Kanban;
+import javafx.embed.swing.SwingFXUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -131,7 +144,36 @@ public class Utilities {
     }
 
 
-    public static void exportAsPDF(){
+    public static void exportAsPDF(HBox HBox, String filePath) throws IOException {
 
+        SnapshotParameters snapshotParams = new SnapshotParameters();
+        snapshotParams.setFill(Color.TRANSPARENT);
+        WritableImage writableImage = HBox.snapshot(snapshotParams, null);
+
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(writableImage, null);
+
+        try (PDDocument document = new PDDocument()) {
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "png", baos);
+            byte[] imageBytes = baos.toByteArray();
+
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(document, imageBytes, "PDFBox Image");
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+                float scale = Math.min(page.getMediaBox().getWidth() / pdImage.getWidth(),
+                        page.getMediaBox().getHeight() / pdImage.getHeight());
+                float imageWidth = pdImage.getWidth() * scale;
+                float imageHeight = pdImage.getHeight() * scale;
+                float xOffset = (page.getMediaBox().getWidth() - imageWidth) / 2;
+                float yOffset = (page.getMediaBox().getHeight() - imageHeight) / 2;
+
+                contentStream.drawImage(pdImage, xOffset, yOffset, imageWidth, imageHeight);
+            }
+
+            document.save(filePath);
+        }
     }
 }

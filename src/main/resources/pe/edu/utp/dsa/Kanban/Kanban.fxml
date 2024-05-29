@@ -231,7 +231,7 @@
                         </Pane>
                      </children>
                   </VBox>
-                  <HBox layoutX="10.0" layoutY="57.0" prefHeight="530.0" prefWidth="990.0">
+                  <HBox fx:id="HBoxColumns" layoutX="10.0" layoutY="57.0" prefHeight="530.0" prefWidth="990.0">
                      <children>
                         <TitledPane fx:id="titledPaneCatalogue" alignment="CENTER" collapsible="false" prefHeight="524.0" prefWidth="198.0" stylesheets="@styles/TitledPaneCatalogue.css" text="CATALOGUE" textFill="WHITE">
                            <content>

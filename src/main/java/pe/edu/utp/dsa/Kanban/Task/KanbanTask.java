@@ -95,6 +95,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.priority = priority;
         this.description = description;
         this.author = author;
+        this.creationTime = LocalDateTime.now();
     }
 
     /**
