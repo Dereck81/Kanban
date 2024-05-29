@@ -143,7 +143,13 @@ public class Utilities {
         return (str != null) && ((!str.isEmpty() && !str.isBlank()));
     }
 
-
+    /**
+     * Export the content of the specified HBox as a PDF file.
+     *
+     * @param HBox     The HBox whose content will be exported.
+     * @param filePath The file path where the PDF will be saved.
+     * @throws IOException If an I/O error occurs while exporting the PDF.
+     */
     public static void exportAsPDF(HBox HBox, String filePath) throws IOException {
 
         SnapshotParameters snapshotParams = new SnapshotParameters();
