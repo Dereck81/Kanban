@@ -39,6 +39,19 @@ public class KanbanTask implements Comparable<KanbanTask>{
             this::getFinishDate
     };
 
+    /**
+     * Constructs a new KanbanTask with the specified attributes.
+     * Throws an IllegalArgumentException if the priority is out of range or the finish date is before the current date.
+     *
+     * @param name the name of the task
+     * @param userAssignedToTheTask the user assigned to the task
+     * @param author the author of the task
+     * @param numberTask the task number
+     * @param priority the priority of the task (0-5)
+     * @param description the description of the task
+     * @param finishDate the finish date of the task
+     * @throws IllegalArgumentException if the priority is out of range or the finish date is before the current date
+     */
     public KanbanTask(String name, User userAssignedToTheTask, String author, int numberTask,
                       byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
 
@@ -55,6 +68,19 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.author = author;
         this.creationTime = LocalDateTime.now();
     }
+
+    /**
+     * Constructs a new KanbanTask without a user assigned to it.
+     * Throws an IllegalArgumentException if the priority is out of range or the finish date is before the current date.
+     *
+     * @param name the name of the task
+     * @param author the author of the task
+     * @param numberTask the task number
+     * @param priority the priority of the task (0-5)
+     * @param description the description of the task
+     * @param finishDate the finish date of the task
+     * @throws IllegalArgumentException if the priority is out of range or the finish date is before the current date
+     */
     public KanbanTask(String name, String author, int numberTask,
                       byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
 
@@ -71,6 +97,12 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.author = author;
     }
 
+    /**
+     * Compares this KanbanTask with another KanbanTask for order based on priority and finish date.
+     *
+     * @param o the KanbanTask to be compared
+     * @return a negative integer, zero, or a positive integer as this task is less than, equal to, or greater than the specified task
+     */
     @Override
     public int compareTo(KanbanTask o) {
         if (priority != o.priority)
@@ -82,6 +114,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
         return -1 * creationTime.compareTo(o.creationTime);
     }
 
+    /**
+     * Checks if this KanbanTask is equal to another object.
+     * Two KanbanTasks are considered equal if all their properties are equal.
+     *
+     * @param kbt the object to compare to
+     * @return true if this task is equal to the specified object, false otherwise
+     */
     @Override
     public boolean equals(Object kbt){
         if (this == kbt) return true;
@@ -94,6 +133,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
         }
         return true;
     }
+
+    // Getters and Setters
 
     public User getuserAssignedToTheTask() {
         if(userAssignedToTheTask == null)
@@ -149,6 +190,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
         return registrationDate;
     }
 
+
+    /**
+     * Creates a Pane representation of the KanbanTask
+     * including various attributes and icons.
+     *
+     * @return a Pane containing the task's details
+     */
     public Pane getPaneTask(){
         double heightPaneTask = 150.0;
         double widthPaneTask = 178.0;
@@ -166,7 +214,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
         Label finishDate = new Label("Finish: " + this.finishDate.toString());
         Label numberTask = new Label("N° Task: #" + this.numberTask);
         Label priority = new Label("P: " + this.priority);
-        TextArea description = new TextArea(truncateString("Description: "+this.description, 100));
+        TextArea description = new TextArea("Description: "+this.description);
 
         Pane paneTask = new Pane();
 
@@ -186,7 +234,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
         //style
         separator.setStyle("-fx-border-width: 5px;");
         description.setWrapText(true);
-        description.setDisable(true);
+        description.setDisable(false);
+        description.setEditable(false);
 
         // size
         separator.setPrefWidth(widthPaneTask-10);

@@ -12,40 +12,69 @@ import java.util.Objects;
 public class Role implements Comparable<Role> {
     private String rol;
 
+    /**
+     * Constructs a new Role with the specified role name.
+     * The role name is capitalized upon creation.
+     *
+     * @param rol the name of the role
+     */
     public Role(String rol){
         this.rol = capitalize(rol);
     }
 
+    /**
+     * Gets the name of the role.
+     *
+     * @return the name of the role
+     */
     public String getRolName(){
         return rol;
     }
 
+    /**
+     * Compares this role to another role for ordering.
+     * Roles are compared by their names in descending order.
+     *
+     * @param o the other role to compare to
+     * @return a negative integer, zero, or a positive integer as this role is
+     * less than, equal to, or greater than the specified role
+     */
     @Override
     public int compareTo(Role o) {
         return this.rol.compareTo(o.getRolName())*-1;
     }
 
+    /**
+     * Sets the name of the role.
+     * The name is capitalized before being set.
+     *
+     * @param rol the new name of the role
+     */
     public void setRolName(String rol){
         this.rol = rol;
     }
 
+    /**
+     * Checks if this role is equal to another object.
+     * Two roles are considered equal if their names are equal.
+     *
+     * @param obj the object to compare to
+     * @return true if this role is equal to the specified object, false otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if (this == obj) return true;
-        /*
-            Interestingly, every time an item in the listView was right-clicked,
-            an exception was thrown regarding each class's overridden equality method,
-            stating that the item passed in or being compared to is null, which was illogical .
-            because no comparison was made (based on the code that was written up to that point),
-            apparently the error may be in some javaFX method or function like
-            .getSelectionModel().getSelectedItems().isEmpty(),
-            which is possibly using equals (this last one is a guess).
-         */
         if(obj == null || obj.getClass() != getClass())
             return false;
         return rol.equals(((Role) obj).getRolName());
     }
 
+    /**
+     * Creates a Pane representation of the role, including its name,
+     * with an associated image.
+     *
+     * @return a Pane containing the role's details
+     */
     public Pane getPane(){
         double height = 15;
 

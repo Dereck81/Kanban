@@ -16,3 +16,11 @@
 .list-view .list-cell:selected .label{
     -fx-text-fill: white;
 }
+
+.list-view .list-cell:selected .text-area{
+    -fx-text-fill: white;
+}
+
+.list-view .list-cell:selected .text-area .content{
+    -fx-background-color: gray;
+}

@@ -7,6 +7,14 @@ import javafx.scene.control.ButtonType;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+    /**
+     * This method is called when an uncaught exception is thrown in a thread.
+     * It processes the exception to find the original cause and then displays an error alert.
+     *
+     * @param t the thread that has an uncaught exception
+     * @param e the exception that was thrown
+     */
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         /*
@@ -36,10 +44,11 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     *  Displays an alert in the user interface.
-     * @param title      title of the alert
-     * @param header     header of the alert
-     * @param contextText body text of the alert
+     * Displays an information alert in the user interface.
+     *
+     * @param title       the title of the alert
+     * @param header      the header text of the alert
+     * @param contextText the body text of the alert
      */
     public static void alertInformation(String title, String header, String contextText){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -49,6 +58,13 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
         alert.showAndWait();
     }
 
+    /**
+     * Displays a warning alert in the user interface.
+     *
+     * @param title       the title of the alert
+     * @param header      the header text of the alert
+     * @param contextText the body text of the alert
+     */
     public static void alertWarning(String title, String header, String contextText){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -57,6 +73,14 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
         alert.showAndWait();
     }
 
+    /**
+     * Displays a confirmation alert in the user interface and returns the user's response.
+     *
+     * @param title       the title of the alert
+     * @param header      the header text of the alert
+     * @param contextText the body text of the alert
+     * @return the user's response as a ConfirmationOptions enum
+     */
     public static ConfirmationOptions alertConfirmation(String title, String header, String contextText){
         ButtonType yes = new ButtonType("Yes"); // true
         ButtonType no = new ButtonType("No"); // false
