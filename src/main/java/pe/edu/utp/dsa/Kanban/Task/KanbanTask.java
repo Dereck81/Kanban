@@ -165,7 +165,7 @@ public class KanbanTask implements Comparable<KanbanTask>{
         Label finishDate = new Label("Finish: " + this.finishDate.toString());
         Label numberTask = new Label("N° Task: #" + this.numberTask);
         Label priority = new Label("P: " + this.priority);
-        TextArea description = new TextArea(truncateString("Description: "+this.description, 100));
+        TextArea description = new TextArea("Description: "+this.description);
 
         Pane paneTask = new Pane();
 
@@ -185,7 +185,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
         //style
         separator.setStyle("-fx-border-width: 5px;");
         description.setWrapText(true);
-        description.setDisable(true);
+        description.setDisable(false);
+        description.setEditable(false);
 
         // size
         separator.setPrefWidth(widthPaneTask-10);
