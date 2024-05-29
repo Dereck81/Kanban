@@ -13,27 +13,64 @@ public class User implements Comparable<User>{
     private String name;
     private Role rol;
 
+    /**
+     * Constructs a new User with the specified name and role.
+     * The name is capitalized upon creation.
+     *
+     * @param name the name of the user
+     * @param rol  the role of the user
+     */
     public User(String name, Role rol){
         this.name = capitalize(name);
         this.rol = rol;
     }
 
+    /**
+     * Gets the name of the user.
+     *
+     * @return the name of the user
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the user.
+     * The name is capitalized before being set.
+     *
+     * @param name the new name of the user
+     */
     public void setName(String name) {
         this.name = capitalize(name);
     }
 
+    /**
+     * Gets the role of the user.
+     *
+     * @return the role of the user
+     */
     public Role getRol() {
         return rol;
     }
 
+    /**
+     * Sets the role of the user.
+     *
+     * @param rol the new role of the user
+     */
     public void setRol(Role rol) {
         this.rol = rol;
     }
 
+    /**
+     * Compares this user to another user for ordering.
+     * Users are compared first by their names in descending order.
+     * If the names are the same, they are compared by their role names in descending order.
+     *
+     * @param o the other user to compare to
+     * @return a negative integer, zero, or a positive integer as this user is
+     * less than, equal to, or greater than the specified user
+     */
     @Override
     public int compareTo(User o) {
         if(this.name.compareTo(o.getName())*-1 != 0)
@@ -42,6 +79,13 @@ public class User implements Comparable<User>{
             return this.rol.getRolName().compareTo(o.getRol().getRolName())*-1;
     }
 
+    /**
+     * Checks if this user is equal to another object.
+     * Two users are considered equal if their names and roles are both equal.
+     *
+     * @param obj the object to compare to
+     * @return true if this user is equal to the specified object, false otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if(this == obj) return true;
@@ -52,6 +96,12 @@ public class User implements Comparable<User>{
         return false;
     }
 
+    /**
+     * Creates a Pane representation of the user, including their name and role,
+     * with associated images.
+     *
+     * @return a Pane containing the user's details
+     */
     public Pane getPane(){
         double height = 35;
 

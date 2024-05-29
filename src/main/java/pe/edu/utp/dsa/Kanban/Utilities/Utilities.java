@@ -69,6 +69,13 @@ public class Utilities {
         }
     }
 
+    /**
+     * Capitalizes each word in the given string. The first letter of each word
+     * will be converted to uppercase and the remaining letters will be in lowercase.
+     *
+     * @param str the string to be capitalized
+     * @return the capitalized string or the original string if it is null or empty
+     */
     public static String capitalize(String str){
         if(str == null || str.isEmpty())
             return str;
@@ -85,6 +92,16 @@ public class Utilities {
         return result.toString();
     }
 
+    /**
+     * Truncates the given string to the specified length and appends ellipsis ("...")
+     * if the string is longer than the specified length. If the last line break
+     * in the string is within the truncation limit, only the substring after the
+     * last line break will be truncated.
+     *
+     * @param str the string to be truncated
+     * @param until the length to truncate the string to
+     * @return the truncated string with ellipsis if needed, or the original string
+     */
     public static String truncateString(String str, int until){
         // until - 1
         // add ellipsis
@@ -102,6 +119,13 @@ public class Utilities {
             return str.substring(0, until)+"...";
     }
 
+    /**
+     * Checks if the given string is valid. A valid string is not null, not empty,
+     * and not blank (does not consist solely of whitespace).
+     *
+     * @param str the string to be validated
+     * @return true if the string is valid, false otherwise
+     */
     public static boolean isValidString(String str){
         return (str != null) && ((!str.isEmpty() && !str.isBlank()));
     }
@@ -110,9 +134,4 @@ public class Utilities {
     public static void exportAsPDF(){
 
     }
-
-
-
-
-
 }

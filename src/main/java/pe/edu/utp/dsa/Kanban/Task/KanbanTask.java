@@ -36,6 +36,19 @@ public class KanbanTask implements Comparable<KanbanTask>{
             this::getFinishDate
     };
 
+    /**
+     * Constructs a new KanbanTask with the specified attributes.
+     * Throws an IllegalArgumentException if the priority is out of range or the finish date is before the current date.
+     *
+     * @param name the name of the task
+     * @param userAssignedToTheTask the user assigned to the task
+     * @param author the author of the task
+     * @param numberTask the task number
+     * @param priority the priority of the task (0-5)
+     * @param description the description of the task
+     * @param finishDate the finish date of the task
+     * @throws IllegalArgumentException if the priority is out of range or the finish date is before the current date
+     */
     public KanbanTask(String name, User userAssignedToTheTask, String author, int numberTask,
                       byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
 
@@ -51,6 +64,19 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.description = description;
         this.author = author;
     }
+
+    /**
+     * Constructs a new KanbanTask without a user assigned to it.
+     * Throws an IllegalArgumentException if the priority is out of range or the finish date is before the current date.
+     *
+     * @param name the name of the task
+     * @param author the author of the task
+     * @param numberTask the task number
+     * @param priority the priority of the task (0-5)
+     * @param description the description of the task
+     * @param finishDate the finish date of the task
+     * @throws IllegalArgumentException if the priority is out of range or the finish date is before the current date
+     */
     public KanbanTask(String name, String author, int numberTask,
                       byte priority, String description, LocalDate finishDate) throws IllegalArgumentException{
 
@@ -67,6 +93,12 @@ public class KanbanTask implements Comparable<KanbanTask>{
         this.author = author;
     }
 
+    /**
+     * Compares this KanbanTask with another KanbanTask for order based on priority and finish date.
+     *
+     * @param o the KanbanTask to be compared
+     * @return a negative integer, zero, or a positive integer as this task is less than, equal to, or greater than the specified task
+     */
     @Override
     public int compareTo(KanbanTask o) {
         int oP = o.getPriority();
@@ -81,6 +113,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
             return 0;
     }
 
+    /**
+     * Checks if this KanbanTask is equal to another object.
+     * Two KanbanTasks are considered equal if all their properties are equal.
+     *
+     * @param kbt the object to compare to
+     * @return true if this task is equal to the specified object, false otherwise
+     */
     @Override
     public boolean equals(Object kbt){
         if (this == kbt) return true;
@@ -93,6 +132,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
         }
         return true;
     }
+
+    // Getters and Setters
 
     public User getuserAssignedToTheTask() {
         if(userAssignedToTheTask == null)
@@ -148,6 +189,13 @@ public class KanbanTask implements Comparable<KanbanTask>{
         return registrationDate;
     }
 
+
+    /**
+     * Creates a Pane representation of the KanbanTask
+     * including various attributes and icons.
+     *
+     * @return a Pane containing the task's details
+     */
     public Pane getPaneTask(){
         double heightPaneTask = 150.0;
         double widthPaneTask = 178.0;
