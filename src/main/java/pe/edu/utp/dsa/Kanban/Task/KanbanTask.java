@@ -93,7 +93,7 @@ public class KanbanTask implements Comparable<KanbanTask>, XMLSerializable {
             throw new IllegalArgumentException("The data entered is invalid");
 
         this.name = name;
-        this.userAssignedToTheTask = null;
+        this.userAssignedToTheTask = new User("Not asigned", null);
         this.numberTask = numberTask;
         this.finishDate = finishDate;
         this.registrationDate = LocalDate.now();

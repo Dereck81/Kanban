@@ -334,7 +334,10 @@ public class KanbanController {
         MenuItem menuItemNext = new MenuItem("Next column");
         menuItemNext.setOnAction(actionEvent -> {
             try {
-                queueNext.enqueue(queueSelected.dequeue());
+                KanbanTask t = listViewSelected.getSelectionModel().getSelectedItem();
+                int i = queueSelected.find(t);
+                queueSelected.deleteAt(i);
+                queueNext.enqueue(t);
             }catch (Exception ignored){}
             updateListView();
             refreshListViews();
@@ -342,7 +345,10 @@ public class KanbanController {
         MenuItem menuItemNext1 = new MenuItem("Next column");
         menuItemNext1.setOnAction(actionEvent -> {
             try {
-                queueNext.enqueue(queueSelected.dequeue());
+                KanbanTask t = listViewSelected.getSelectionModel().getSelectedItem();
+                int i = queueSelected.find(t);
+                queueSelected.deleteAt(i);
+                queueNext.enqueue(t);
             }catch (Exception ignored){}
             updateListView();
             refreshListViews();
