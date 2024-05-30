@@ -162,15 +162,6 @@ public class KanbanController {
     // Roles
     private Role selectedRole = null;
 
-    // Maps - HashMaps - Etc
-    private final Map<ResetSection, Runnable> resetActions = Map.of(
-
-    );
-    private final Map<ResetSection, Runnable> asd = Map.of(
-
-    );
-
-
     // Functions and methods
     @FXML
     public void initialize(){

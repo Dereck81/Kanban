@@ -16,7 +16,7 @@ public class Kanban extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        //Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Kanban.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1206, 615);
         KanbanController controller = fxmlLoader.getController();
