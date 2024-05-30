@@ -600,8 +600,8 @@ public class KanbanController {
         anchorPaneAddUser.setVisible(false);
         titledPaneUsers.setExpanded(true);
         anchorPaneEditUser.setVisible(true);
-        int indexUser = listViewUsers.getSelectionModel().getSelectedIndex();
-        User user = queueUser.getElement(indexUser);
+        User user = listViewUsers.getSelectionModel().getSelectedItem();
+        int indexUser = queueUser.find(user);
         selectedRole = user.getRol();
         textFieldUsername_edit.setText(user.getName());
         userRoleEditMenuButton.setText(selectedRole.getRolName());
@@ -722,9 +722,8 @@ public class KanbanController {
         titledPaneTaskOthers.setExpanded(false);
     }
 
-    private void editUser(int index){
+    private void editUser(int queueIndex){
         String textUser = textFieldUsername_edit.getText();
-		int queueIndex = queueUser.find(listViewUsers.getItems().get(index));
 
         if(!isValidString(textUser))
             throw new IllegalArgumentException("The username is empty.");

@@ -204,8 +204,7 @@ public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        if (iterableHeap == null)
-            iterableHeap = maxHeap.clone();
+        iterableHeap = maxHeap.clone();
         return iterableHeap;
     }
 }

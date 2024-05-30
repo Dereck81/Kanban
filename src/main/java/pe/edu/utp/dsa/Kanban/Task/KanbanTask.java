@@ -318,7 +318,7 @@ public class KanbanTask implements Comparable<KanbanTask>, XMLSerializable {
                 .enclosedXmlValue("Priority", String.valueOf(priority))
                 .enclosedXmlValue("Number", String.valueOf(numberTask))
                 .enclosedXmlValue("Author", author)
-                .enclosedXmlValue("UserAsignedToTask", userAssignedToTheTask.getName())
+                .enclosedXmlValue("UserAsignedToTask", (userAssignedToTheTask == null) ? "null" : userAssignedToTheTask.getName())
                 .enclosedXmlValue("RegistrationDate", String.valueOf(registrationDate))
                 .enclosedXmlValue("Description", description)
                 .enclosedXmlValue("FinishDate", String.valueOf(finishDate))
