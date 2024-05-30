@@ -9,7 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import pe.edu.utp.dsa.Kanban.Kanban;
 import pe.edu.utp.dsa.Kanban.ListView.ListCell;
 import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
 import pe.edu.utp.dsa.DSA.PriorityQueue;
@@ -118,7 +117,7 @@ public class KanbanController {
     private ContextMenu contextMenuUser = new ContextMenu();
 
     // JavaFX FileChoosers
-    private FileChooser fileChooserOpen, fileChooserExportAsPDF;
+    private FileChooser fileChooserOpen, fileChooserExportAsPDF, fileChooserSaveFile;
 
     // JavaFX MenuItems
     private MenuItem menuItemDelete_Role, menuItemEdit_Role, menuItemDelete_User, menuItemEdit_User;
@@ -200,6 +199,12 @@ public class KanbanController {
         fileChooserExportAsPDF.setTitle("Export As PDF");
         fileChooserExportAsPDF.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("PDF", "*.pdf")
+        );
+        // fileChooserSaveFile
+        fileChooserSaveFile = new FileChooser();
+        fileChooserSaveFile.setTitle("Save File");
+        fileChooserSaveFile.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("XML", "*.xml")
         );
     }
 
@@ -761,7 +766,7 @@ public class KanbanController {
     private void openFile(){
         file = fileChooserOpen.showOpenDialog(null);
         if (file == null) return;
-        Utilities.writeRecordRecentFiles(file.getPath());
+        IO.writeRecordRecentFiles(file.getPath());
         updateRecentFiles();
         getStage().setTitle(ApplicationTitle+file.getName());
     }
@@ -773,7 +778,7 @@ public class KanbanController {
     private void openRecentFile(String pathRecentFile) throws FileNotFoundException {
         file = new File(pathRecentFile);
         if (!file.exists()){
-            Utilities.deleteRecentFilesRecord(pathRecentFile);
+            IO.deleteRecentFilesRecord(pathRecentFile);
             updateRecentFiles();
             throw new FileNotFoundException("File not found: "+pathRecentFile);
         }
@@ -785,7 +790,7 @@ public class KanbanController {
      */
     private void updateRecentFiles(){
         String[] directorySeparators = new String[]{"/", "\\"};
-        ArrayList<String> recentFiles = Utilities.readRecordRecentFiles();
+        ArrayList<String> recentFiles = IO.readRecordRecentFiles();
         int index = 0;
 
         if (menuOpenRecentFile != null) menuOpenRecentFile.getItems().clear();
@@ -920,7 +925,11 @@ public class KanbanController {
     }
 
     @FXML
-    private void saveFile(){
+    private void saveFile() throws Exception {
+        // open file - vver esto
+        file = fileChooserSaveFile.showSaveDialog(null);
+        if (file == null) return;
+
         //String outputPath = "KanbanBoard-" + projectCreatorName + ".xml";
         StringBuilderWrapper sbw = new StringBuilderWrapper();
 
@@ -949,8 +958,8 @@ public class KanbanController {
                 .append(tasksXIS.export());
 
         sbw.closeXMLTag();
-
-        System.out.println(sbw);
+        IO.saveData(sbw.toString(), file.getPath());
+        //System.out.println(sbw);
     }
 
     @FXML
@@ -965,17 +974,14 @@ public class KanbanController {
                 "Are you sure to continue?",
                 "Do you want to save your changes to a file?"
         );
-        if(confirmationOption == ConfirmationOptions.NO)
-            System.out.println("NO");
-        else if (confirmationOption == ConfirmationOptions.CANCEL)
-            return;
-        else {
-            deselectAllListCell();
-            file = fileChooserExportAsPDF.showSaveDialog(null);
-            if(file == null) return;
-            saveFile();
+        if(confirmationOption == ConfirmationOptions.YES) {
+            try {
+                saveFile();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-        Platform.exit();
+        else if (confirmationOption == ConfirmationOptions.NO) Platform.exit();
     }
 
 
@@ -984,8 +990,7 @@ public class KanbanController {
         deselectAllListCell();
         file = fileChooserExportAsPDF.showSaveDialog(null);
         if(file == null) return;
-        Utilities.exportAsPDF(HBoxColumns, file.getPath());
-
+        IO.exportAsPDF(HBoxColumns, file.getPath());
         GlobalExceptionHandler.alertInformation(
                 "Export",
                 "Export to PDF",
