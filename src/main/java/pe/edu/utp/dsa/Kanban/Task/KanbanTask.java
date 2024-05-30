@@ -8,6 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import pe.edu.utp.dsa.Kanban.Kanban;
+import pe.edu.utp.dsa.StringManipulation.StringBuilderWrapper;
+import pe.edu.utp.dsa.StringManipulation.StringCreator;
+import pe.edu.utp.dsa.XML.XMLSerializable;
 
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.truncateString;
 
@@ -15,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class KanbanTask implements Comparable<KanbanTask>{
+public class KanbanTask implements Comparable<KanbanTask>, XMLSerializable {
 
     private String name;
     private byte priority;
@@ -27,6 +30,8 @@ public class KanbanTask implements Comparable<KanbanTask>{
     private LocalDate finishDate;
 
     private LocalDateTime creationTime;
+
+    private int xmlHierachy = 0;
 
     KanbanTaskPropertyGetter<?>[] propertyGetters = new KanbanTaskPropertyGetter[]{
             this::getAuthor,
@@ -299,5 +304,32 @@ public class KanbanTask implements Comparable<KanbanTask>{
 
     public void setFinishDate(LocalDate d) {
         this.finishDate = d;
+    }
+
+    @Override
+    public String serialize() {
+        StringBuilderWrapper sbw = new StringBuilderWrapper();
+
+        String preffix = StringCreator.ntimes('\t', xmlHierachy);
+
+        sbw.setPreffix(preffix)
+                .line("<Task>")
+                .enclosedXmlValue("TaskName", name)
+                .enclosedXmlValue("Priority", String.valueOf(priority))
+                .enclosedXmlValue("Number", String.valueOf(numberTask))
+                .enclosedXmlValue("Author", author)
+                .enclosedXmlValue("UserAsignedToTask", userAssignedToTheTask.getName())
+                .enclosedXmlValue("RegistrationDate", String.valueOf(registrationDate))
+                .enclosedXmlValue("Description", description)
+                .enclosedXmlValue("FinishDate", String.valueOf(finishDate))
+                .enclosedXmlValue("CreationTime", String.valueOf(creationTime))
+                .line("</Task>");
+
+        return sbw.toString();
+    }
+
+    @Override
+    public void setHierachy(int h) {
+        xmlHierachy = h;
     }
 }

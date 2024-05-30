@@ -5,12 +5,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import pe.edu.utp.dsa.Kanban.Kanban;
+import pe.edu.utp.dsa.StringManipulation.StringBuilderWrapper;
+import pe.edu.utp.dsa.StringManipulation.StringCreator;
+import pe.edu.utp.dsa.XML.XMLSerializable;
+
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.capitalize;
 
 import java.util.Objects;
 
-public class Role implements Comparable<Role> {
+public class Role implements Comparable<Role>, XMLSerializable {
     private String rol;
+    private int hierachy;
 
     /**
      * Constructs a new Role with the specified role name.
@@ -75,7 +80,7 @@ public class Role implements Comparable<Role> {
      *
      * @return a Pane containing the role's details
      */
-    public Pane getPane(){
+    public Pane getPane() {
         double height = 15;
 
         Label rol = new Label(this.rol);
@@ -99,9 +104,19 @@ public class Role implements Comparable<Role> {
         paneRol.getChildren().addAll(imageView, rol);
 
         return paneRol;
-
     }
 
+    @Override
+    public String serialize() {
+        StringBuilderWrapper sbw = new StringBuilderWrapper();
+        String preffix = StringCreator.ntimes('\t', hierachy);
+        sbw.setPreffix(preffix)
+                .enclosedXmlValue("Role", rol);
+        return sbw.toString();
+    }
 
-
+    @Override
+    public void setHierachy(int h) {
+        hierachy = h;
+    }
 }

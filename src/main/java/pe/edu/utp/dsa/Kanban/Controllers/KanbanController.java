@@ -9,12 +9,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import pe.edu.utp.dsa.Kanban.Kanban;
 import pe.edu.utp.dsa.Kanban.ListView.ListCell;
 import pe.edu.utp.dsa.Kanban.Task.KanbanTask;
 import pe.edu.utp.dsa.DSA.PriorityQueue;
 import pe.edu.utp.dsa.Kanban.Task.Role;
 import pe.edu.utp.dsa.Kanban.Task.User;
 import pe.edu.utp.dsa.Kanban.Utilities.*;
+import pe.edu.utp.dsa.StringManipulation.StringBuilderWrapper;
+import pe.edu.utp.dsa.XML.XMLIteratorSerializer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -918,8 +921,36 @@ public class KanbanController {
 
     @FXML
     private void saveFile(){
-        String outputPath = "KanbanBoard-" + projectCreatorName + ".xml";
-        StringBuilder sb = new StringBuilder();
+        //String outputPath = "KanbanBoard-" + projectCreatorName + ".xml";
+        StringBuilderWrapper sbw = new StringBuilderWrapper();
+
+        XMLIteratorSerializer<User, PriorityQueue<User>> usersXIS = new XMLIteratorSerializer<>();
+        XMLIteratorSerializer<Role, PriorityQueue<Role>> rolesXIS = new XMLIteratorSerializer<>();
+        XMLIteratorSerializer<KanbanTask, PriorityQueue<KanbanTask>> tasksXIS = new XMLIteratorSerializer<>();
+
+        int hierachy = 0;
+        // String preffix = StringCreator.ntimes('\t', hierachy);
+        sbw.openXMLTag("KanbanBoard");
+
+        usersXIS.setHierachy(hierachy + 1);
+        rolesXIS.setHierachy(hierachy + 1);
+        tasksXIS.setHierachy(hierachy + 1);
+
+        usersXIS.addIterable(queueUser, "Users");
+        rolesXIS.addIterable(queueRole, "Roles");
+        tasksXIS.addIterable(queueCatalogue, "Catalogue")
+                .addIterable(queueToDo, "ToDo")
+                .addIterable(queueInProgress, "InProgress")
+                .addIterable(queueFinished, "Finished")
+                .addIterable(queueToBeChecked, "ToBeChecked");
+
+        sbw.append(usersXIS.export())
+                .append(rolesXIS.export())
+                .append(tasksXIS.export());
+
+        sbw.closeXMLTag();
+
+        System.out.println(sbw);
     }
 
     @FXML
@@ -938,7 +969,12 @@ public class KanbanController {
             System.out.println("NO");
         else if (confirmationOption == ConfirmationOptions.CANCEL)
             return;
-        else saveFile();
+        else {
+            deselectAllListCell();
+            file = fileChooserExportAsPDF.showSaveDialog(null);
+            if(file == null) return;
+            saveFile();
+        }
         Platform.exit();
     }
 

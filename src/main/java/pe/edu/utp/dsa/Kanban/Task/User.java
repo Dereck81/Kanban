@@ -5,13 +5,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import pe.edu.utp.dsa.Kanban.Kanban;
+import pe.edu.utp.dsa.StringManipulation.StringBuilderWrapper;
+import pe.edu.utp.dsa.StringManipulation.StringCreator;
+import pe.edu.utp.dsa.XML.XMLIteratorSerializer;
+import pe.edu.utp.dsa.XML.XMLSerializable;
+
 import static pe.edu.utp.dsa.Kanban.Utilities.Utilities.capitalize;
 import java.util.Objects;
 
-public class User implements Comparable<User>{
+public class User implements Comparable<User>, XMLSerializable {
 
     private String name;
     private Role rol;
+
+    private int hierachy;
 
     /**
      * Constructs a new User with the specified name and role.
@@ -136,5 +143,27 @@ public class User implements Comparable<User>{
         return paneUser;
     }
 
+    @Override
+    public String serialize() {
+        StringBuilderWrapper sbw = new StringBuilderWrapper();
 
+        String indentation = StringCreator.ntimes('\t', hierachy);
+
+        rol.setHierachy(hierachy + 1);
+
+        sbw.setPreffix(indentation)
+                .line("<User>")
+                .line("\t<UserName>")
+                .line("\t\t" + name)
+                .line("\t</UserName>")
+                .line(rol.serialize())
+                .line("</User>");
+
+        return sbw.toString();
+    }
+
+    @Override
+    public void setHierachy(int h) {
+        hierachy = h;
+    }
 }

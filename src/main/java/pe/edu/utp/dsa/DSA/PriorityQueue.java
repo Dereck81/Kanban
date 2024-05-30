@@ -2,19 +2,31 @@ package pe.edu.utp.dsa.DSA;
 
 import java.util.*;
 
-public class PriorityQueue<T extends Comparable<T>> {
+/**
+ * Generic PriorityQueue implemented with a Max-Heap.
+ * Implements the Iterator by creating a copy of this and popping the top element every time next() is called.
+ * @param <T>
+ */
+public class PriorityQueue<T extends Comparable<T>> implements Iterable<T> {
+
 
     @FunctionalInterface
     public interface ElementEditor<T> {
         void edit(T elem);
     }
 
-    private class MaxHeap<T extends Comparable<T>> {
+    private class MaxHeap<T extends Comparable<T>> implements Iterator<T> {
 
         private DynamicArray<T> heap;
 
         public MaxHeap() {
             heap = new DynamicArray<>(0);
+        }
+
+        public MaxHeap<T> clone() {
+            MaxHeap<T> hp = new MaxHeap<>();
+            hp.heap = heap.clone();
+            return hp;
         }
 
         private int parent(int nd) {
@@ -108,9 +120,26 @@ public class PriorityQueue<T extends Comparable<T>> {
             heap.pop();
             downHeapify(pos);
         }
+
+        @Override
+        public boolean hasNext() {
+            return heap.size() > 0;
+        }
+
+        /**
+         * Iterate and consume the heap.
+         * @return T
+         */
+        @Override
+        public T next() {
+            return popMax();
+        }
     }
 
     private final MaxHeap<T> maxHeap;
+
+    private MaxHeap<T> iterableHeap = null;
+    private int iterator = 0;
 
     public PriorityQueue() {
         maxHeap = new MaxHeap<>();
@@ -171,5 +200,12 @@ public class PriorityQueue<T extends Comparable<T>> {
 
     public int find(T x) {
         return maxHeap.find(x);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        if (iterableHeap == null)
+            iterableHeap = maxHeap.clone();
+        return iterableHeap;
     }
 }
