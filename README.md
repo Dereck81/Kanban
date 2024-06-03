@@ -1,6 +1,7 @@
 # Kanban
 
 Kanban Task management application made using JavaFX and 2 braincells.
+PROJECT NOT FINISHED!
 
 ## Directory Structure
 
